@@ -1,16 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
+from apps.forms import LoginForm, RegisterForm
 
 
 # 회원가입
 def register(request):
 
-    return render(request, "user/register.html")
+    form = RegisterForm()
+
+    return render(request, "user/register.html", {"form" : form})
 
 # 로그인
 def login_view(request):
 
-    return render(request, "user/login.html")
+    form = LoginForm(request.POST)
+
+    return render(request, "user/login.html", {"form" : form})
 
 # 로그아웃
 def logout_view(request):
