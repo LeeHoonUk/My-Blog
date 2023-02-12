@@ -23,10 +23,19 @@ def register(request):
 
 # 로그인
 def login_view(request):
+    # POST 요청 확인
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        res = (lambda x : x.login(request, x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 422))(form)
+    else:
+        form = LoginForm()
+        res = (None, 200)
 
-    form = LoginForm(request.POST)
-
-    return render(request, "user/login.html", {"form" : form})
+    # 성공 시 메인 화면 이동
+    if res[0] == '성공':
+        return redirect(request.GET.get("next") or "index")
+    else:
+        return render(request, "user/login.html", {"form" : form, "msg": res[0]}, status=res[1])
 
 # 로그아웃
 def logout_view(request):

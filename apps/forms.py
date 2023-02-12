@@ -1,6 +1,6 @@
 from django import forms
 from apps.models import Users
-from argon2 import PasswordHasher # pip install argon2-cffi
+from argon2 import PasswordHasher, exceptions # pip install argon2-cffi
 from django.contrib.auth import login
 
 # 회원가입 Form
@@ -45,11 +45,28 @@ class RegisterForm(forms.Form):
 # 로그인 Form
 class LoginForm(forms.Form):
     user_id = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "userid", "class": "form-control", "placeholder": "아이디를 입력해주세요",
-        "autofocus": "autofocus", "minlength": 4
+        "id": "userid", "class": "form-control", "placeholder": "아이디를 입력해주세요", "autofocus": "autofocus"
     }))
 
     password = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput(attrs={
         "id": "password", "class": "form-control", "placeholder": "비밀번호를 입력해주세요",
-        "aria-describedby": "password", "autocomplete": "off", "minlength": 4
+        "aria-describedby": "password", "autocomplete": "off"
     }))
+
+    def login(self, request, data):
+        user_id, pw = data.get('user_id'), data.get('password')
+        res = ("올바른 유저ID와 패스워드를 입력하세요.", 412)
+        try:
+            user = Users.objects.get(username=user_id)
+        except Users.DoesNotExist:
+            pass
+        else:
+            try:
+                PasswordHasher().verify(user.password, pw)
+            except exceptions.VerifyMismatchError:
+                pass
+            else:
+                login(request, user)
+                res = ('성공', 200)
+
+        return res
