@@ -1,4 +1,7 @@
 from django import forms
+from apps.models import Users
+from argon2 import PasswordHasher # pip install argon2-cffi
+from django.contrib.auth import login
 
 # 회원가입 Form
 class RegisterForm(forms.Form):
@@ -18,12 +21,26 @@ class RegisterForm(forms.Form):
     }))
 
     hint = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "hint", "class": "form-control", "placeholder": "비밀번호 답변 (꼭 기억해주세요)"
+        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디를 남겨주세요 (꼭 기억해주세요)"
     }))
 
     check = forms.CharField(max_length=100, required=True, widget=forms.HiddenInput(attrs={
         "id": "checker", "class": "form-control", "value": "False"
     }))
+
+    def save(self, request, data):
+        user_id, pw, check_pw = data.get('user_id'), data.get('password'), data.get('check_password')
+        hint, check = data.get('hint'), data.get('check')
+
+        res = (lambda x, y, z : ('아이디 중복확인이 되지 않았습니다.', 412) if x == 'False' else (
+            ('비밀번호가 일치하지 않습니다.', 412) if y != z else (('비밀번호가 4자리 이하입니다.', 412) if len(y) < 4 else ('성공', 200))
+        ))(check, pw, check_pw)
+        if res[1] == 200:
+            user = Users(username=user_id, password=PasswordHasher().hash(pw), hint=hint, user_auth="MEMBER")
+            user.save()
+            login(request, user)
+
+        return res
 
 # 로그인 Form
 class LoginForm(forms.Form):
