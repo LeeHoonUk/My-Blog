@@ -71,24 +71,36 @@
                 </span>
             </a>
         </li> {% endcomment %}
-        <li>
+        {% comment %} <li>
             <a href="{% url 'login' %}">
                 <i class="fa fa-regular fa-user fa-2x"></i>
                 <span class="nav-text">
                     로그인 하기
                 </span>
             </a>
-        </li>
+        </li> {% endcomment %}
     </ul>
 
     <ul class="logout">
-        <li>
-            <a href="{% url 'logout' %}">
-                <i class="fa fa-power-off fa-2x"></i>
-                <span class="nav-text">
-                    로그 아웃
-                </span>
-            </a>
-        </li>  
+        {% if user.is_anonymous %}
+            <li>
+                <a href="{% url 'login' %}">
+                    <i class="fa fa-power-off fa-2x"></i>
+                    <span class="nav-text">
+                        로그인
+                    </span>
+                </a>
+            </li>  
+        {% endif %}
+        {% if user.is_authenticated %}    
+            <li>
+                <a href="{% url 'logout' %}">
+                    <i class="fa fa-power-off fa-2x"></i>
+                    <span class="nav-text">
+                        로그 아웃
+                    </span>
+                </a>
+            </li>
+        {% endif %}
     </ul>
 </nav>
