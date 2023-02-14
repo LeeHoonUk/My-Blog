@@ -77,3 +77,20 @@ class AuthTestCase(TestCase):
         request = c.post("/user/login", body)
 
         self.assertEqual(request.status_code, 302)
+
+    # 초기화 Test
+    def test_find(self):
+        c = Client()
+
+        # 비밀번호 힌트가 맞지 않음
+        body = {"user_id": "Test_User", "hint": "answer1"}
+        request = c.post("/user/find", body)
+
+        self.assertEqual(request.status_code, 412)
+
+        # 초기화 성공
+        body = {"user_id": "Test_User", "hint": "answer"}
+        request = c.post("/user/find", body)
+
+        self.assertEqual(request.status_code, 200)
+
