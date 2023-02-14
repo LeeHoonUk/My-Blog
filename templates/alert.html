@@ -17,7 +17,11 @@
             잠시만 기다려주세요
         </div>
         <script>
-            Swal.fire('{{first}}','{{second}}','success')
+            {% if random_number %}
+                Swal.fire('{{first}}{{random_number}} 입니다.','{{second}}','success')
+            {% else %}
+                Swal.fire('{{first}}','{{second}}','success')
+            {% endif %}
         </script>
     </body>
 </html>

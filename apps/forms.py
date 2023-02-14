@@ -2,6 +2,7 @@ from django import forms
 from apps.models import Users
 from argon2 import PasswordHasher, exceptions # pip install argon2-cffi
 from django.contrib.auth import login
+import random
 
 # 회원가입 Form
 class RegisterForm(forms.Form):
@@ -68,5 +69,33 @@ class LoginForm(forms.Form):
             else:
                 login(request, user)
                 res = ('성공', 200)
+
+        return res
+
+# 초기화 Form
+class FindForm(forms.Form):
+    user_id = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        "id": "userid", "class": "form-control", "placeholder": "아이디를 입력해주세요", "autofocus": "autofocus"
+    }))
+
+    hint = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디를 남겨주세요 (꼭 기억해주세요)"
+    }))
+
+    def check(self, data):
+        user_id, hint = data.get('user_id'), data.get('hint')
+        random_number = random.randrange(1000, 10000)
+        res = ("일치하지 않습니다.", 412)
+        try:
+            user = Users.objects.get(username=user_id)
+        except Users.DoesNotExist:
+            pass
+        else:
+            if user.hint != hint:
+                pass
+            else:
+                user.password = PasswordHasher().hash(str(random_number))
+                user.save()
+                res = ('성공', 200, random_number)
 
         return res

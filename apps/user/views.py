@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
-from apps.forms import LoginForm, RegisterForm
+from apps.forms import *
 from django.http.response import JsonResponse
 from apps.models import Users
 
@@ -10,7 +10,7 @@ def register(request):
     # POST 요청 확인
     if request.method == "POST":
         form = RegisterForm(request.POST)
-        res = (lambda x : x.save(request, x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 422))(form)
+        res = (lambda x : x.save(request, x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 412))(form)
     else:
         form = RegisterForm()
         res = (None, 200)
@@ -26,7 +26,7 @@ def login_view(request):
     # POST 요청 확인
     if request.method == "POST":
         form = LoginForm(request.POST)
-        res = (lambda x : x.login(request, x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 422))(form)
+        res = (lambda x : x.login(request, x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 412))(form)
     else:
         form = LoginForm()
         res = (None, 200)
@@ -59,3 +59,20 @@ def user_check(request):
         )(userid)
 
     return JsonResponse(data=dict(msg=res[0], check=res[1]), status=res[2], safe=False)
+
+def user_find(request):
+    if request.method == "POST":
+        form = FindForm(request.POST)
+        res = (lambda x : x.check(x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 412))(form)        
+    else:
+        form = FindForm()
+        res = (None, 200)
+
+    # 성공 시 로그인 페이지 이동
+    if res[0] == '성공':
+        return render(request, 'alert.html', {
+            "first": "초기화 비밀번호는 ", "second": '다음엔 꼭 기억해주세요',
+            "times": 5, 'url': "login", "random_number": res[2]
+        })
+    else:
+        return render(request, "user/find.html", {"form": form, "msg": res[0]}, status=res[1])

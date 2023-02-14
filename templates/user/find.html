@@ -30,24 +30,25 @@
                 <form class="card", method="POST">
                     {% csrf_token %}
                     <div class="card-body">
-                        <h3 class="text-center default-text py-3"><i class="fa fa-lock"></i> 로그인</h3>
+                        <h3 class="text-center default-text py-3"><i class="fa fa-lock"></i> 비밀번호 초기화</h3>
                         {% if msg %}
                             <p class="mb-4, msg_tag">* {{ msg }}</p>
+                        {% else %}
+                            <p class="mb-4, msg_tag">* 초기화 비밀번호는 무작위 4자리입니다.</p>
                         {% endif %}
                         <!--Body-->
                         <div class="md-form">
                             <i class="fa fa-solid fa-user prefix grey-text"></i>
-                            {{ form.user_id }}
+                            {{form.user_id}}
                         </div>
                         <div class="md-form">
-                            <i class="fa fa-lock prefix grey-text"></i>
-                            {{ form.password }}
-                        </div>
+                            <i class="fa fa-solid fa-star prefix grey-text"></i>
+                            {{form.hint}}
+                        </div>       
                         <div class="text-center py-4">
-                            <button class="btn btn-outline-pink">로그인 </button>
+                            <button class="btn btn-outline-pink">비밀번호 초기화</button>
                         </div>
-                        <a href="{% url 'register' %}">아직 회원이 아니신가요?</a><br/><hr/>
-                        <a href="{% url 'user_find' %}">비밀번호가 기억이 나지 않나요?</a>
+                        <a href="{% url 'login' %}">로그인 하시겠습니까?</a>
                     </div>
                 </form>
             </div>
@@ -57,4 +58,5 @@
     </div>
     <!--MDB Forms-->
 </main>
+<script src="{% static 'js/myscript.js' %}"></script>
 {% endblock %}

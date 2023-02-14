@@ -10,4 +10,6 @@ urlpatterns = [
     path("logout", logout_view, name="logout"),
     # 유저확인
     path("check", user_check, name="user_check"),
+    # 비밀번호 초기화
+    path("find", user_find, name="user_find"),
 ]
