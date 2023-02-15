@@ -93,4 +93,24 @@ class AuthTestCase(TestCase):
         request = c.post("/user/find", body)
 
         self.assertEqual(request.status_code, 200)
+    
+    # 비밀번호 변경 Test
+    def test_find(self):
+        c = Client()
+
+        # 로그인 성공
+        body = {"user_id": "Test_User", "password": "1234"}
+        request = c.post("/user/login", body)
+
+        # 비밀번호 4자리 미만인 경우
+        body = {"user_id": "Test_User", "password": "12"}
+        request = c.post("/user/my-page", body)
+
+        self.assertEqual(request.status_code, 412)
+
+        # 비밀번호 변경 성공
+        body = {"user_id": "Test_User", "password": "1234"}
+        request = c.post("/user/my-page", body)
+
+        self.assertEqual(request.status_code, 302)
 
