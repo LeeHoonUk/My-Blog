@@ -148,5 +148,10 @@
     <!-- Main JS -->
     <script src="{% static 'js/main.js' %}"></script>
     
+    <script>
+        $(function(){
+            document.getElementById('{{nav_check}}').className = "menu-item active"
+        });
+    </script>
 </body>
 </html>

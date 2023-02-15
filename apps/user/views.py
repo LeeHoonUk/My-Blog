@@ -3,6 +3,7 @@ from django.contrib.auth import logout
 from apps.forms import *
 from django.http.response import JsonResponse
 from apps.models import Users
+from django.contrib.auth.decorators import login_required
 
 
 # 회원가입
@@ -76,3 +77,25 @@ def user_find(request):
         })
     else:
         return render(request, "user/find.html", {"form": form, "msg": res[0]}, status=res[1])
+
+@login_required
+def my_page(request):
+
+    # sidebar active
+    nav_check = "sidebar_main"
+
+    # 유저 확인
+    user = Users.objects.get(pk=request.user.id)
+
+    # 비밀번호 변경
+    if request.method == "POST":
+        pw = request.POST.get('password')
+        
+        if len(pw) < 4:
+            return JsonResponse(status=412, data=dict(msg='비밀번호가 4자리 이하입니다.'), safe=False)
+        else:
+            user.password = PasswordHasher().hash(pw)
+            user.save()
+            return redirect('logout')
+
+    return render(request, "user/mypage.html", {"nav_check": nav_check})

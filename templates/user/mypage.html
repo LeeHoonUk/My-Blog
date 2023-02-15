@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">My Page / </span> 나만의 페이지
+    </h4>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="divider">
+                    <div class="divider-text">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<div class="buy-now">
+    <a style="color:white" class="btn btn-danger btn-buy-now btnAjax">비밀번호 변경하기</a>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript">
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+
+    let btnAjax = document.querySelector('.btnAjax');
+    
+    btnAjax.addEventListener('click', e => {
+        Swal.fire({
+            title: '비밀번호 변경',
+            input: 'password',
+            inputLabel: '4자리 이상을 입력하여 주세요',            
+            inputPlaceholder: '변경하실 비밀번호를 입력하여 주세요',
+            inputAttributes: {
+                name:'password',
+                minlength: 4,
+                required : 'required'
+            },
+            confirmButtonText : '비밀번호 변경',
+            showDenyButton: true,
+            denyButtonColor: '#d33',
+            denyButtonText : '유지'
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                $.ajax({
+                    url : '/user/my-page',
+                    headers: {'X-CSRFToken': csrftoken},
+                    type : 'POST',
+                    data : {
+                        password : result.value,
+                    },
+                    success:function(data){
+                        Swal.fire('좋아요','변경이 완료되었습니다.','success')
+                        setTimeout('location.href="{% url 'login' %}"',1000)
+                    },
+                    error: function(e){
+                        Swal.fire('실패',e.responseJSON.msg,'error')
+                    }
+                })
+            } else if (result.isDenied) {
+                Swal.fire('초기화 비밀번호는 변경하여 주세요!', '', 'info')
+            }
+        })
+    });
+    
+    
+</script>
+{% endblock %} 

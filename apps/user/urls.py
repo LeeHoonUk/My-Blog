@@ -12,4 +12,6 @@ urlpatterns = [
     path("check", user_check, name="user_check"),
     # 비밀번호 초기화
     path("find", user_find, name="user_find"),
+    # 마이페이지
+    path("my-page", my_page, name="my_page"),
 ]
