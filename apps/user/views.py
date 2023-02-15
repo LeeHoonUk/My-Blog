@@ -72,7 +72,7 @@ def user_find(request):
     if res[0] == '성공':
         return render(request, 'alert.html', {
             "first": "초기화 비밀번호는 ", "second": '다음엔 꼭 기억해주세요',
-            "times": 5, 'url': "login", "random_number": res[2]
+            "times": 3, 'url': "login", "random_number": res[2]
         })
     else:
         return render(request, "user/find.html", {"form": form, "msg": res[0]}, status=res[1])

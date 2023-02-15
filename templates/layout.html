@@ -1,39 +1,62 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+    lang="ko"
+    class="light-style layout-menu-fixed"
+    dir="ltr"
+    data-theme="theme-default"
+    data-template="vertical-menu-template-free"
+>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>My Blog</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>나만의 블로그</title>
 
-    <!--Copyright (c) 2023 by MDBootstrap (https://codepen.io/mdbootstrap/pen/Yrdjwr)
+    <meta name="description" content="" />
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet"
+    />
 
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'css/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'css/theme-default.css' %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static 'css/demo.css' %}" />
 
-    -->
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static 'css/perfect-scrollbar.css' %}" />
 
-    <!-- 구글 폰트 -->
-    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+    <!-- Helpers -->
+    <script src="{% static 'js/helpers.js' %}"></script>
 
-    <!-- 합쳐지고 최소화된 최신 CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/css/mdb.min.css">
-    
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static 'js/config.js' %}"></script>
 
-    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-    <!-- 나의 CSS -->
-    <link rel="stylesheet" href="{% static 'css/nav.css' %}" />
-    
     <!-- sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     
@@ -46,11 +69,84 @@
     
 </head>
 <body>
-    {% include 'nav/nav.html' %}
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
     
-    {% block content %}
+            {% include 'nav/sidebar.html' %}
+
+            <!-- Layout container -->
+            <div class="layout-page">
+        
+                {% include 'nav/nav.html' %}
+
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+
+                    {% block content %}
+
+                    {% endblock %}
+
+                    <!-- Footer -->
+                    <footer class="content-footer footer bg-footer-theme">
+                        <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                            <div class="mb-2 mb-md-0">
+                                ©
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                                , made with ❤️ by
+                                <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+                            </div>
+                            <div>
+                                <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
+                                <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
+                                <a
+                                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                                target="_blank"
+                                class="footer-link me-4"
+                                >Documentation</a>
+                                <a
+                                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                                    target="_blank"
+                                    class="footer-link me-4"
+                                >Support</a>
+                            </div>
+                        </div>
+                    </footer>
+                    <!-- / Footer -->
+                    
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!-- Content wrapper -->
+            </div>
+            <!-- / Layout page -->
+        </div>
+        <!-- / Layout wrapper -->
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+
+    {% block link %}
 
     {% endblock %}
+
+    <!-- My JS -->
+    
+    {% block script %}
+                
+    {% endblock %}
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{% static 'js/jquery/jquery.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'js/menu.js' %}"></script>
+    <!-- Main JS -->
+    <script src="{% static 'js/main.js' %}"></script>
     
 </body>
 </html>

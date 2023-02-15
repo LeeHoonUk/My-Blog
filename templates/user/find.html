@@ -1,62 +1,63 @@
-{% extends "layout.html" %}
+{% extends "user/layout.html" %}
 
 {% load static %}
 
-{% block statics %}
-    <link rel="stylesheet" href="{% static 'css/user.css' %}" />
-    <style>
-        /* -------------------
-                My Css
-        ---------------------- */
-        .form-control[readonly] {
-            background-color : #ccc;
-        }
-        .msg_tag {
-            text-align : center; 
-            color : red;
-        }
-    </style>
-{% endblock %}
-
 {% block content %}
-<main>
-    <!--MDB Forms-->
-    <br/><br/><br/><br/><br/>
-    <div class="container mt-4">
-        <!-- Grid row -->
-        <div class="row">
-            <!-- Grid column -->
-            <div class="col-md-12 mb-4">
-                <form class="card", method="POST">
-                    {% csrf_token %}
-                    <div class="card-body">
-                        <h3 class="text-center default-text py-3"><i class="fa fa-lock"></i> 비밀번호 초기화</h3>
-                        {% if msg %}
-                            <p class="mb-4, msg_tag">* {{ msg }}</p>
-                        {% else %}
-                            <p class="mb-4, msg_tag">* 초기화 비밀번호는 무작위 4자리입니다.</p>
-                        {% endif %}
-                        <!--Body-->
-                        <div class="md-form">
-                            <i class="fa fa-solid fa-user prefix grey-text"></i>
-                            {{form.user_id}}
-                        </div>
-                        <div class="md-form">
-                            <i class="fa fa-solid fa-star prefix grey-text"></i>
-                            {{form.hint}}
-                        </div>       
-                        <div class="text-center py-4">
-                            <button class="btn btn-outline-pink">비밀번호 초기화</button>
-                        </div>
-                        <a href="{% url 'login' %}">로그인 하시겠습니까?</a>
+<!-- Content -->
+
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="{% url 'index'%}" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <img src="{% static 'assets/main.png' %}" alt="" width="130px" height="70px">
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bolder">블로그</span>
+                        </a>
                     </div>
-                </form>
+                    <!-- /Logo -->
+                    <h4 class="mb-2">🔒 비밀번호 초기화 </h4>
+                    {% if msg %}
+                        <p style="margin-top:20px;color:red;" class="mb-4">{{ msg }}</p>
+                    {% else %}
+                        <p style="margin-top:20px;color:red;" class="mb-4">초기화 비밀번호는 무작위 4자리입니다.</p>
+                    {% endif %}
+                
+                    <form id="formAuthentication" class="mb-3" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            {{ form.user_id }}
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label for="hint" class="form-label">내 보물 1호는?</label>
+                            {{ form.hint }}
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary d-grid w-100" type="submit">비밀번호 초기화</button>
+                        </div>
+                    </form>
+                    <div class="text-center">
+                        <a href="{% url 'login' %}" class="d-flex align-items-center justify-content-center">
+                            로그인 하러가기
+                        </a>
+                    </div>
+
+                </div>
             </div>
-            <!-- Grid column -->
+            <!-- /Register -->
         </div>
-        <!-- Grid row -->
     </div>
-    <!--MDB Forms-->
-</main>
-<script src="{% static 'js/myscript.js' %}"></script>
+</div>
+
+<!-- / Content -->
+
+<div class="buy-now">
+    <a href="{% url 'index'%}" class="btn btn-danger btn-buy-now">Dashboard</a>
+</div>
 {% endblock %}

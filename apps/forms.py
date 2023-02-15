@@ -22,7 +22,7 @@ class RegisterForm(forms.Form):
     }))
 
     hint = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디를 남겨주세요 (꼭 기억해주세요)"
+        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디 (꼭 기억해주세요)"
     }))
 
     check = forms.CharField(max_length=100, required=True, widget=forms.HiddenInput(attrs={
@@ -79,7 +79,7 @@ class FindForm(forms.Form):
     }))
 
     hint = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디를 남겨주세요 (꼭 기억해주세요)"
+        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디 (꼭 기억해주세요)"
     }))
 
     def check(self, data):

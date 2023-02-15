@@ -1,106 +1,96 @@
 {% load static %}
 
-<nav class="main-menu">
-    <br/>
-    <ul>
-        <li>
-            <a href="{% url 'index' %}">
-                <i class="fa fa-home fa-2x"></i>
-                <span class="nav-text">
-                    메인 화면
-                </span>
-            </a>
-            
-        </li>
-        {% comment %} <li class="has-subnav">
-            <a href="#">
-                <i class="fa fa-globe fa-2x"></i>
-                <span class="nav-text">
-                    Global Surveyors
-                </span>
-            </a>
-            
-        </li>
-        <li class="has-subnav">
-            <a href="#">
-                <i class="fa fa-comments fa-2x"></i>
-                <span class="nav-text">
-                    Group Hub Forums
-                </span>
-            </a>
-            
-        </li>
-        <li class="has-subnav">
-            <a href="#">
-                <i class="fa fa-camera-retro fa-2x"></i>
-                <span class="nav-text">
-                    Survey Photos
-                </span>
-            </a>
-            
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa fa-film fa-2x"></i>
-                <span class="nav-text">
-                    Surveying Tutorials
-                </span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa fa-book fa-2x"></i>
-                <span class="nav-text">
-                    Surveying Jobs
-                </span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa fa-cogs fa-2x"></i>
-                <span class="nav-text">
-                    Tools & Resources
-                </span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa fa-map-marker fa-2x"></i>
-                <span class="nav-text">
-                    Member Map
-                </span>
-            </a>
-        </li> {% endcomment %}
-        {% comment %} <li>
-            <a href="{% url 'login' %}">
-                <i class="fa fa-regular fa-user fa-2x"></i>
-                <span class="nav-text">
-                    로그인 하기
-                </span>
-            </a>
-        </li> {% endcomment %}
-    </ul>
+<!-- Navbar -->
+<nav 
+    class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+    id="layout-navbar"
+>
+    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+            <i class="fa-solid fa-align-justify"></i>
+        </a>
+    </div>
 
-    <ul class="logout">
-        {% if user.is_anonymous %}
-            <li>
-                <a href="{% url 'login' %}">
-                    <i class="fa fa-power-off fa-2x"></i>
-                    <span class="nav-text">
-                        로그인
-                    </span>
+    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+        <!-- Search -->
+        <form class="navbar-nav align-items-center" action="#">
+            <div class="nav-item d-flex align-items-center">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    class="form-control border-0 shadow-none"
+                    placeholder="검색하기"
+                    aria-label="Search..."
+                    name="key"
+                />
+            </div>
+        </form>
+        <!-- /Search -->
+
+        <ul class="navbar-nav flex-row align-items-center ms-auto">
+            <!-- User -->
+            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="{% static 'assets/user.png' %}" alt class="w-px-40 h-auto rounded-circle" />
+                    </div>
                 </a>
-            </li>  
-        {% endif %}
-        {% if user.is_authenticated %}    
-            <li>
-                <a href="{% url 'logout' %}">
-                    <i class="fa fa-power-off fa-2x"></i>
-                    <span class="nav-text">
-                        로그 아웃
-                    </span>
-                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar avatar-online">
+                                        <img src="{% static 'assets/user.png' %}" alt class="w-px-40 h-auto rounded-circle" />
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    {% if user.is_anonymous %}
+                                        <span class="fw-semibold d-block">방문객</span>
+                                        <small class="text-muted">GUEST</small>
+                                    {% endif %}
+                                    {% if user.is_authenticated %}
+                                        <span class="fw-semibold d-block">{{user}}</span>
+                                        <small class="text-muted">{{user.user_auth}}</small>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a class="dropdown-item" href="">
+                                <i class="bx bx-user me-2"></i>
+                            <span class="align-middle">My Page</span>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
+                    {% endif %}
+                    <li>
+                        {% if user.is_anonymous %}
+                            <a class="dropdown-item" href="{% url 'login'%}">
+                                <i class="bx bx-power-off me-2"></i>
+                                <span class="align-middle">Login</span>
+                            </a>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <a class="dropdown-item" href="{% url 'logout'%}">
+                                <i class="bx bx-power-off me-2"></i>
+                                <span class="align-middle">Log Out</span>
+                            </a>
+                        {% endif %}
+                    </li>
+                </ul>
             </li>
-        {% endif %}
-    </ul>
+            <!--/ User -->
+        </ul>
+    </div>
 </nav>
+
+<!-- / Navbar -->

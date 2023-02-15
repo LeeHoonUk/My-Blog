@@ -1,3 +1,25 @@
+$(function(){
+    $('#change-eye').click(function(){
+        let cls = document.getElementById('change-eye').className
+        if (cls == 'fa-solid fa-eye'){
+            document.getElementById('change-eye').className = 'fa-solid fa-eye-slash'
+        }
+        else{
+            document.getElementById('change-eye').className = 'fa-solid fa-eye'
+        }
+    });
+
+    $('#change-eye1').click(function(){
+        let cls = document.getElementById('change-eye1').className
+        if (cls == 'fa-solid fa-eye'){
+            document.getElementById('change-eye1').className = 'fa-solid fa-eye-slash'
+        }
+        else{
+            document.getElementById('change-eye1').className = 'fa-solid fa-eye'
+        }
+    });
+});
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
