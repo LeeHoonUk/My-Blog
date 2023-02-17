@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.apps.AppsConfig'
+    'apps.apps.AppsConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
+# 로그인 URL 지정
 LOGIN_URL = "/user/login"
+
+# 페이지 당 갯수 지정
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 9
+}
 
 TEMPLATES = [
     {

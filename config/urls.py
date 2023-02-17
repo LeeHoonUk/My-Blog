@@ -16,8 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
-
 from apps.views import *
+
+# rest_framework
+from rest_framework import routers
+from apps.memo.apis import *
+
+router = routers.DefaultRouter()
+router.register(r'memos', MemoViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +33,7 @@ urlpatterns = [
 
     # 사용자 관련 화면
     path("user/", include("apps.user.urls")),
+
+    # rest_framework
+    path("apis/", include(router.urls)),
 ]
