@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
-from apps.forms import *
+from apps.forms.user_forms import *
 from django.http.response import JsonResponse
 from apps.models import Users
 from django.contrib.auth.decorators import login_required

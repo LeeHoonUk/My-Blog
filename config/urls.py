@@ -28,12 +28,15 @@ router.register(r'memos', MemoViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # rest_framework
+    path("apis/", include(router.urls)),
+
     # 메인 화면
     path('', index, name="index"),
 
     # 사용자 관련 화면
     path("user/", include("apps.user.urls")),
 
-    # rest_framework
-    path("apis/", include(router.urls)),
+    # 메모 관련 화면
+    path("memo/", include("apps.memo.urls")),
 ]

@@ -7,26 +7,26 @@ import random
 # 회원가입 Form
 class RegisterForm(forms.Form):
     user_id = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "userid", "class": "form-control", "placeholder": "아이디를 입력해주세요", 
-        "autofocus": "autofocus", "minlength": 4
+        "id" : "userid", "class" : "form-control", "placeholder" : "아이디를 입력해주세요", 
+        "autofocus" : "autofocus", "minlength" : 4
     }))
 
     password = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput(attrs={
-        "id": "password", "class": "form-control", "placeholder": "비밀번호를 입력해주세요",
-        "aria-describedby": "password", "autocomplete": "off", "minlength": 4
+        "id" : "password", "class" : "form-control", "placeholder" : "비밀번호를 입력해주세요",
+        "aria-describedby" : "password", "autocomplete" : "off", "minlength" : 4
     }))
 
     check_password = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput(attrs={
-        "id": "check_password", "class": "form-control", "placeholder": "비밀번호를 한번 더 입력해주세요",
-        "aria-describedby": "password", "autocomplete": "off", "minlength": 4
+        "id" : "check_password", "class" : "form-control", "placeholder" : "비밀번호를 한번 더 입력해주세요",
+        "aria-describedby" : "password", "autocomplete" : "off", "minlength" : 4
     }))
 
     hint = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디 (꼭 기억해주세요)"
+        "id" : "hint", "class" : "form-control", "placeholder" : "가장 기억에 남는 한마디 (꼭 기억해주세요)"
     }))
 
     check = forms.CharField(max_length=100, required=True, widget=forms.HiddenInput(attrs={
-        "id": "checker", "class": "form-control", "value": "False"
+        "id" : "checker", "class" : "form-control", "value" : "False"
     }))
 
     def save(self, request, data):
@@ -46,12 +46,12 @@ class RegisterForm(forms.Form):
 # 로그인 Form
 class LoginForm(forms.Form):
     user_id = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "userid", "class": "form-control", "placeholder": "아이디를 입력해주세요", "autofocus": "autofocus"
+        "id" : "userid", "class" : "form-control", "placeholder" : "아이디를 입력해주세요", "autofocus" : "autofocus"
     }))
 
     password = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput(attrs={
-        "id": "password", "class": "form-control", "placeholder": "비밀번호를 입력해주세요",
-        "aria-describedby": "password", "autocomplete": "off"
+        "id" : "password", "class" : "form-control", "placeholder" : "비밀번호를 입력해주세요",
+        "aria-describedby" : "password", "autocomplete" : "off"
     }))
 
     def login(self, request, data):
@@ -75,11 +75,11 @@ class LoginForm(forms.Form):
 # 초기화 Form
 class FindForm(forms.Form):
     user_id = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "userid", "class": "form-control", "placeholder": "아이디를 입력해주세요", "autofocus": "autofocus"
+        "id" : "userid", "class" : "form-control", "placeholder" : "아이디를 입력해주세요", "autofocus" : "autofocus"
     }))
 
     hint = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        "id": "hint", "class": "form-control", "placeholder": "가장 기억에 남는 한마디 (꼭 기억해주세요)"
+        "id" : "hint", "class" : "form-control", "placeholder" : "가장 기억에 남는 한마디 (꼭 기억해주세요)"
     }))
 
     def check(self, data):

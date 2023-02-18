@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">✏️ &nbsp; 자신의 메모를 기록하여 주세요</h4>
+
+    <div class="row">
+        <!-- Basic -->
+        <form class="col-md-12" name="testForm">
+            {% csrf_token %}
+            <div class="card mb-4">
+                <h5 class="card-header" style = "color : red; text-align : center">❗️ 제목과 내용은 반드시 입력하여 주세요!</h5>
+                <div class="card-body demo-vertical-spacing demo-only-element">
+                    <div class="divider">
+                        <div class="divider-text">
+                            작성자
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <input id="writer" class="form-control" value="{{user}}" readonly="readonly" style="text-align : center"/>
+                    </div>
+
+                    <div class="divider">
+                        <div class="divider-text">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label">제목</label>
+                        {{form.title}}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="content" class="form-label">메모 내용</label>
+                        {{form.content}}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">메인 이미지</label>
+                        {{form.img}}
+                    </div>
+                    
+                    <div class="divider">
+                        <div class="divider-text">
+                            키워드를 선택하여 주세요
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {% if labels %}
+                            <select class="form-select" id="exampleFormControlSelect2" name="labels" aria-label="Multiple select example" multiple>
+                                {% for l in labels %}
+                                    <option style="text-align:center;margin-top:7px;cursor:pointer" value="{{l.id}}">
+                                        {{l.label}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <div class="keyword_link">
+                                <a id="keyword" href="{% url 'index' %}">
+                                    현재 라벨이 없습니다. 필요한 라벨 등록하기
+                                </a>         
+                            </div>
+                        {% endif %}
+                    </div>
+                    <br/><br/><br/><br/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+  <!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<div class="buy-now">
+    <a style="color:white" class="btn btn-danger btn-buy-now btnAjax">메모 등록하기</a>
+</div>
+{% endblock %}
