@@ -39,4 +39,7 @@ urlpatterns = [
 
     # 메모 관련 화면
     path("memo/", include("apps.memo.urls")),
+
+    # 키워드 관련 화면
+    path("label/", include("apps.label.urls")),
 ]

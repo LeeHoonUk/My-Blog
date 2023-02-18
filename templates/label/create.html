@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">📌 &nbsp; 필요한 키워드를 생성하여 주세요</h4>
+
+    <div class="row">
+        <!-- Basic -->
+        <form id="testForm" class="col-md-12" name="testForm">
+            {% csrf_token %}
+            <div class="card mb-4">
+                <h5 class="card-header" style = "color : red; text-align : center">❗️ 키워드를 반드시 입력하여 주세요!</h5>
+                <div class="card-body demo-vertical-spacing demo-only-element">
+                    <div class="divider">
+                        <div class="divider-text">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">키워드</label>
+                        {{form.label}}
+                    </div>
+                    <div class="divider">
+                        <div class="divider-text">
+                            현재 생성된 키워드입니다.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {% if labels %}
+                            <select class="form-select" id="exampleFormControlSelect2" aria-label="Multiple select example" multiple>
+                                {% for l in labels %}
+                                    <option style="text-align:center;margin-top:7px;cursor:pointer">
+                                        {{l.label}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <div class="keyword_link" style = "color : red;">
+                                현재 생성된 키워드가 없습니다. 필요한 키워드를 생성하여 주세요
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    <br/><br/><br/><br/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+  <!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<div class="buy-now">
+    <a style="color:white" class="btn btn-danger btn-buy-now btnAjax">키워드 등록하기</a>
+</div>
+
+{% endblock %}

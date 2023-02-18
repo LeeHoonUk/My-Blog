@@ -10,7 +10,8 @@ class AuthTestCase(TestCase):
             username="Test_User",
             password=PasswordHasher().hash("1234"),
             hint="answer",
-            user_auth="MEMBER")
+            user_auth="MEMBER"
+        )
 
     # 아이디 중복확인 Test
     def test_idcheck(self):
@@ -37,27 +38,27 @@ class AuthTestCase(TestCase):
         c = Client()
 
         # 중복확인 실패 시
-        body = {"user_id": "test", "password": "1234",
-                "check_password": "1234", "hint": "answer", "check": "False"}
+        body = {"user_id" : "test", "password" : "1234",
+                "check_password" : "1234", "hint" : "answer", "check" : "False"}
         request = c.post("/user/register", body)
 
         self.assertEqual(request.status_code, 412)
 
         # 비밀번호 4자리 미만인 경우
-        body = {"user_id": "test", "password": "12",
-                "check_password": "12", "hint": "answer", "check": "True"}
+        body = {"user_id" : "test", "password" : "12",
+                "check_password" : "12", "hint" : "answer", "check" : "True"}
         request = c.post("/user/register", body)
 
         # 비밀번호 매칭 오류
-        body = {"user_id": "test", "password": "12345",
-                "check_password": "1234", "hint": "answer", "check": "True"}
+        body = {"user_id" : "test", "password" : "12345",
+                "check_password" : "1234", "hint" : "answer", "check" : "True"}
         request = c.post("/user/register", body)
 
         self.assertEqual(request.status_code, 412)
 
         # 회원가입 성공!
-        body = {"user_id": "tester", "password": "1234",
-                "check_password": "1234", "hint": "answer", "check": "True"}
+        body = {"user_id" : "tester", "password" : "1234",
+                "check_password" : "1234", "hint" : "answer", "check" : "True"}
         request = c.post("/user/register", body)
 
         self.assertEqual(request.status_code, 200)
@@ -67,13 +68,13 @@ class AuthTestCase(TestCase):
         c = Client()
 
         # 아이디 비밀번호 일치하지 않음
-        body = {"user_id": "Test_User", "password": "12344"}
+        body = {"user_id" : "Test_User", "password" : "12344"}
         request = c.post("/user/login", body)
 
         self.assertEqual(request.status_code, 412)
 
         # 로그인 성공
-        body = {"user_id": "Test_User", "password": "1234"}
+        body = {"user_id" : "Test_User", "password" : "1234"}
         request = c.post("/user/login", body)
 
         self.assertEqual(request.status_code, 302)
@@ -83,13 +84,13 @@ class AuthTestCase(TestCase):
         c = Client()
 
         # 비밀번호 힌트가 맞지 않음
-        body = {"user_id": "Test_User", "hint": "answer1"}
+        body = {"user_id" : "Test_User", "hint" : "answer1"}
         request = c.post("/user/find", body)
 
         self.assertEqual(request.status_code, 412)
 
         # 초기화 성공
-        body = {"user_id": "Test_User", "hint": "answer"}
+        body = {"user_id" : "Test_User", "hint" : "answer"}
         request = c.post("/user/find", body)
 
         self.assertEqual(request.status_code, 200)
@@ -99,17 +100,17 @@ class AuthTestCase(TestCase):
         c = Client()
 
         # 로그인 성공
-        body = {"user_id": "Test_User", "password": "1234"}
+        body = {"user_id" : "Test_User", "password" : "1234"}
         request = c.post("/user/login", body)
 
         # 비밀번호 4자리 미만인 경우
-        body = {"user_id": "Test_User", "password": "12"}
+        body = {"user_id" : "Test_User", "password" : "12"}
         request = c.post("/user/my-page", body)
 
         self.assertEqual(request.status_code, 412)
 
         # 비밀번호 변경 성공
-        body = {"user_id": "Test_User", "password": "1234"}
+        body = {"user_id" : "Test_User", "password" : "1234"}
         request = c.post("/user/my-page", body)
 
         self.assertEqual(request.status_code, 302)

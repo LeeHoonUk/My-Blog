@@ -21,7 +21,7 @@
         <li id="sidebar_main" class="menu-item">
             <a href="{% url 'index'%}" class="menu-link">
                 <i class="menu-icon tf-icons fa-solid fa-house-user"></i>
-                <div>Dashboard</div>
+                <div>대시보드</div>
             </a>
         </li>
 
@@ -33,7 +33,7 @@
         <li id="sidebar_memo" class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons fa-solid fa-file-pen"></i>
-                <div>Memo</div>
+                <div>메모</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
@@ -48,7 +48,26 @@
                 </li>
             </ul>
         </li>
-        
+
+        <!-- Memos -->
+        <li id="sidebar_label" class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons fa-solid fa-tag"></i>
+                <div> 키워드 </div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{% url 'l-write' %}" class="menu-link">
+                        <div>키워드 생성하기</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <div>키워드 확인하기</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Next</span></li>
     </ul>
 </aside>

@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from apps.models import Users, Memos, Labels
+
+from apps.models import Users, Memos
+
 
 # 유저 Serializer
 class UserSerializer(serializers.ModelSerializer):

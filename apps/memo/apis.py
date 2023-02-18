@@ -1,6 +1,5 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions
 from .serializers import MemoSerializer
-from rest_framework.response import Response
 
 from apps.models import Memos
 
