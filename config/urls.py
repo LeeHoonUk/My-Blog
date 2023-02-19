@@ -21,9 +21,11 @@ from apps.views import *
 # rest_framework
 from rest_framework import routers
 from apps.memo.apis import *
+from apps.label.apis import *
 
 router = routers.DefaultRouter()
 router.register(r'memos', MemoViewSet)
+router.register(r'labels', LabelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -30,7 +30,7 @@
                     </div>
                     <div class="mb-3">
                         {% if labels %}
-                            <select class="form-select" id="exampleFormControlSelect2" aria-label="Multiple select example" multiple>
+                            <select class="form-select" id="exampleFormControlSelect2" aria-label="Multiple select example" style="height : 500px" multiple>
                                 {% for l in labels %}
                                     <option style="text-align:center;margin-top:7px;cursor:pointer">
                                         {{l.label}}
@@ -44,7 +44,6 @@
                         {% endif %}
 
                     </div>
-                    <br/><br/><br/><br/>
                 </div>
             </div>
         </form>
@@ -58,4 +57,69 @@
     <a style="color:white" class="btn btn-danger btn-buy-now btnAjax">키워드 등록하기</a>
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+
+    let btnAjax = document.querySelector('.btnAjax');
+    
+    btnAjax.addEventListener('click', e => {
+        var queryString = $("form[name=testForm]").serialize() ;
+        $.ajax({
+            url : '/apis/labels/',
+            headers: {'X-CSRFToken': csrftoken},
+            type : 'POST',
+            enctype:'multipart/form-data',
+            data : queryString,
+            success:function(data){
+                Swal.fire('Good','등록이 완료되었습니다.','success')
+                setTimeout('location.href="{% url 'l-write' %}"',1000)
+            },
+            error: function(e){
+                Swal.fire(e.responseJSON,'','error')
+            }
+        })
+    });
+    
+    // Enter 키 허용
+    document.querySelector('#testForm').addEventListener('keydown', function (e) {
+        if (window.event.keyCode == 13) {
+            var queryString = $("form[name=testForm]").serialize() ;
+            $.ajax({
+                url : '/apis/labels/',
+                headers: {'X-CSRFToken': csrftoken},
+                type : 'POST',
+                enctype:'multipart/form-data',
+                data : queryString,
+                success:function(data){
+                    Swal.fire('Good','등록이 완료되었습니다.','success')
+                    setTimeout('location.href="{% url 'l-write' %}"',1000)
+                },
+                error: function(e){
+                    Swal.fire(e.responseJSON,'','error')
+                }
+            })
+        }
+    });
+    
+</script>
 {% endblock %}
