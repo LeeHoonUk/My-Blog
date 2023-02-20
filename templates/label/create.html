@@ -9,7 +9,8 @@
 
     <div class="row">
         <!-- Basic -->
-        <form id="testForm" class="col-md-12" name="testForm">
+        <!-- Enter 입력 시 submit 제거 -->
+        <form id="testForm" class="col-md-12" name="testForm" onsubmit="return false">
             {% csrf_token %}
             <div class="card mb-4">
                 <h5 class="card-header" style = "color : red; text-align : center">❗️ 키워드를 반드시 입력하여 주세요!</h5>
@@ -99,7 +100,7 @@
             }
         })
     });
-    
+
     // Enter 키 허용
     document.querySelector('#testForm').addEventListener('keydown', function (e) {
         if (window.event.keyCode == 13) {
