@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">📌 우리의 키워드 모음집</h4>
+    <div class="row mb-5">
+        <!-- Contextual Classes -->
+        <div class="card">
+            <br/>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="font-size:20px"><strong>키워드</strong></th>
+                            <th style="font-size:20px"><strong>작성된 메모 갯수</strong></th>
+                            <th style="font-size:20px"><strong>등록일</strong></th>
+                            <th style="font-size:20px"><strong>삭제</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% if labels %}
+                            {% for l in labels %}
+                                <tr class="{% cycle 'table-danger' 'table-light' 'table-warning' 'table-light' 'table-success' 'table-light' 'table-info' 'table-light' 'table-primary' 'table-light' %}">
+                                    <td>
+                                        <strong>{{l.label}}</strong>
+                                    </td>
+                                    <td>
+                                        &emsp;&emsp;
+                                        <span class="badge bg-label-info me-1">
+                                            &nbsp;{{l.memos.all.count}}개&nbsp;
+                                        </span>
+                                    </td>
+                                    <td>{{labels.0.created_at|date:"Y년 m월 d일"}}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button onclick="deleteLabel({{l.id}});" style="cursor:pointer;color:red;" type="button" class="btn p-0 dropdown-toggle hide-arrow">
+                                                <i class="fa-solid fa-ban"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="table-default">
+                                <td>
+                                    <i class="fab fa-solid fa-tag text-warning me-3"></i>
+                                    <strong>작성된 키워드가 없습니다.</strong>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                <br/><br/><br/>
+            </div>
+        </div>
+        <!--/ Contextual Classes -->
+
+        <div class="demo-inline-spacing">
+            <!-- Basic Pagination -->
+            <nav style="display:flex;justify-content : center;" aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if labels.has_previous %}
+                        <li class="page-item first">
+                            <a class="page-link" href="?p=1">
+                                <i class="tf-icon fa-solid fa-angles-left"></i>                                
+                            </a>
+                        </li>
+                        <li class="page-item prev">
+                            <a class="page-link" href="?p={{labels.previous_page_number }}">
+                                <i class="tf-icon fa-solid fa-angle-left"></i>                                
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link">❌</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <a class="page-link">{{labels.number}} / {{labels.paginator.num_pages}}</a>
+                    </li>
+                    {% if labels.has_next %}
+                        <li class="page-item next">
+                            <a class="page-link" href="?p={{labels.next_page_number }}">
+                                <i class="tf-icon fa-solid fa-angle-right"></i>                                
+                            </a>
+                        </li>
+                        <li class="page-item last">
+                            <a class="page-link" href="?p={{labels.paginator.num_pages }}">
+                                <i class="tf-icon fa-solid fa-angles-right"></i>                                
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link">❌</a>
+                        </li>
+                    {% endif %}
+                    
+                </ul>
+            </nav>
+            <!--/ Basic Pagination -->
+        </div>
+    </div>
+    <!--/ Images -->
+</div>
+<!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<div class="buy-now">
+    <a href="{% url 'l-write'%}"class="btn btn-danger btn-buy-now">키워드 생성하기</a>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script type="text/javascript">
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+    
+    function deleteLabel(id) {
+        Swal.fire({
+            title: '정말로 삭제하실건가요?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: '예',
+            denyButtonText: `아니요`,
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                $.ajax({
+                    url : '/apis/labels/'+id+"/",
+                    headers: {'X-CSRFToken': csrftoken},
+                    type : 'DELETE',
+                    success:function(data){
+                        Swal.fire('ㅠㅠ','삭제가 완료되었습니다.','success')
+                        setTimeout('location.href="{% url 'l-list' %}"',1000)
+                    },
+                    error: function(e){
+                        Swal.fire('접근할 수 없습니다.',e,'error')
+                    }
+                })
+            } else if (result.isDenied) {
+                Swal.fire('좋은 선택입니다!', '', 'info')
+            }
+        })
+        
+    };
+    
+</script>
+{% endblock %}
