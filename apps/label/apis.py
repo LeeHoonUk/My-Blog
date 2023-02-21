@@ -27,4 +27,4 @@ class LabelViewSet(viewsets.ModelViewSet):
                 return Response(LabelSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
             rtn = "유효하지 않은 정보입니다."
-            return Response(rtn, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            return Response(rtn, status=status.HTTP_412_PRECONDITION_FAILED)

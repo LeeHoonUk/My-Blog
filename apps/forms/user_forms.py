@@ -34,7 +34,7 @@ class RegisterForm(forms.Form):
         hint, check = data.get('hint'), data.get('check')
 
         res = (lambda x, y, z : ('아이디 중복확인이 되지 않았습니다.', 412) if x == 'False' else (
-            ('비밀번호가 일치하지 않습니다.', 412) if y != z else (('비밀번호가 4자리 이하입니다.', 412) if len(y) < 4 else ('성공', 200))
+            ('비밀번호가 일치하지 않습니다.', 422) if y != z else (('비밀번호가 4자리 이하입니다.', 412) if len(y) < 4 else ('성공', 200))
         ))(check, pw, check_pw)
         if res[1] == 200:
             user = Users(username=user_id, password=PasswordHasher().hash(pw), hint=hint, user_auth="MEMBER")
@@ -56,7 +56,7 @@ class LoginForm(forms.Form):
 
     def login(self, request, data):
         user_id, pw = data.get('user_id'), data.get('password')
-        res = ("올바른 유저ID와 패스워드를 입력하세요.", 412)
+        res = ("올바른 유저ID와 패스워드를 입력하세요.", 422)
         try:
             user = Users.objects.get(username=user_id)
         except Users.DoesNotExist:
@@ -85,7 +85,7 @@ class FindForm(forms.Form):
     def check(self, data):
         user_id, hint = data.get('user_id'), data.get('hint')
         random_number = random.randrange(1000, 10000)
-        res = ("일치하지 않습니다.", 412)
+        res = ("일치하지 않습니다.", 422)
         try:
             user = Users.objects.get(username=user_id)
         except Users.DoesNotExist:

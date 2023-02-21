@@ -27,7 +27,7 @@ class AuthTestCase(TestCase):
 
         # 아이디가 이미 존재하는 경우
         request = c.post("/user/check?userid="+'Test_User')
-        self.assertEqual(request.status_code, 412)
+        self.assertEqual(request.status_code, 422)
 
         # 정상입력 아이디
         request = c.post("/user/check?userid="+'Success')
@@ -54,7 +54,7 @@ class AuthTestCase(TestCase):
                 "check_password" : "1234", "hint" : "answer", "check" : "True"}
         request = c.post("/user/register", body)
 
-        self.assertEqual(request.status_code, 412)
+        self.assertEqual(request.status_code, 422)
 
         # 회원가입 성공!
         body = {"user_id" : "tester", "password" : "1234",
@@ -71,7 +71,7 @@ class AuthTestCase(TestCase):
         body = {"user_id" : "Test_User", "password" : "12344"}
         request = c.post("/user/login", body)
 
-        self.assertEqual(request.status_code, 412)
+        self.assertEqual(request.status_code, 422)
 
         # 로그인 성공
         body = {"user_id" : "Test_User", "password" : "1234"}
@@ -80,14 +80,14 @@ class AuthTestCase(TestCase):
         self.assertEqual(request.status_code, 302)
 
     # 초기화 Test
-    def test_find(self):
+    def test_reset(self):
         c = Client()
 
         # 비밀번호 힌트가 맞지 않음
         body = {"user_id" : "Test_User", "hint" : "answer1"}
         request = c.post("/user/find", body)
 
-        self.assertEqual(request.status_code, 412)
+        self.assertEqual(request.status_code, 422)
 
         # 초기화 성공
         body = {"user_id" : "Test_User", "hint" : "answer"}
@@ -96,7 +96,7 @@ class AuthTestCase(TestCase):
         self.assertEqual(request.status_code, 200)
     
     # 비밀번호 변경 Test
-    def test_find(self):
+    def test_change_pw(self):
         c = Client()
 
         # 로그인 성공

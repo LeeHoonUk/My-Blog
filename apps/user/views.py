@@ -52,7 +52,7 @@ def user_check(request):
     # 올바른 데이터 확인
     try:
         Users.objects.get(username=userid)
-        res = ('현재 등록된 아이디입니다.', 'error', 412)
+        res = ('현재 등록된 아이디입니다.', 'error', 422)
 
     except Exception:
         res = (lambda x : ('아이디를 입력해주세요', 'warning', 412) if x == '' else (
@@ -64,7 +64,7 @@ def user_check(request):
 def user_find(request):
     if request.method == "POST":
         form = FindForm(request.POST)
-        res = (lambda x : x.check(x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 412))(form)        
+        res = (lambda x : x.check(x.cleaned_data) if x.is_valid() else ('올바르지 않은 데이터 입니다.', 422))(form)        
     else:
         form = FindForm()
         res = (None, 200)
