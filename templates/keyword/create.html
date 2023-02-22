@@ -22,7 +22,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="title" class="form-label">키워드</label>
-                        {{form.label}}
+                        {{form.keyword}}
                     </div>
                     <div class="divider">
                         <div class="divider-text">
@@ -30,11 +30,11 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        {% if labels %}
+                        {% if keywords %}
                             <select class="form-select" id="exampleFormControlSelect2" aria-label="Multiple select example" style="height : 500px" multiple>
-                                {% for l in labels %}
+                                {% for k in keywords %}
                                     <option style="text-align:center;margin-top:7px;cursor:pointer">
-                                        {{l.label}}
+                                        {{k.keyword}}
                                     </option>
                                 {% endfor %}
                             </select>
@@ -86,14 +86,14 @@
     btnAjax.addEventListener('click', e => {
         var queryString = $("form[name=testForm]").serialize() ;
         $.ajax({
-            url : '/apis/labels/',
+            url : '/apis/keywords/',
             headers: {'X-CSRFToken': csrftoken},
             type : 'POST',
             enctype:'multipart/form-data',
             data : queryString,
             success:function(data){
                 Swal.fire('Good','등록이 완료되었습니다.','success')
-                setTimeout('location.href="{% url 'l-write' %}"',1000)
+                setTimeout('location.href="{% url 'k-write' %}"',1000)
             },
             error: function(e){
                 Swal.fire(e.responseJSON,'','error')
@@ -106,14 +106,14 @@
         if (window.event.keyCode == 13) {
             var queryString = $("form[name=testForm]").serialize() ;
             $.ajax({
-                url : '/apis/labels/',
+                url : '/apis/keywords/',
                 headers: {'X-CSRFToken': csrftoken},
                 type : 'POST',
                 enctype:'multipart/form-data',
                 data : queryString,
                 success:function(data){
                     Swal.fire('Good','등록이 완료되었습니다.','success')
-                    setTimeout('location.href="{% url 'l-write' %}"',1000)
+                    setTimeout('location.href="{% url 'k-write' %}"',1000)
                 },
                 error: function(e){
                     Swal.fire(e.responseJSON,'','error')

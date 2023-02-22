@@ -18,14 +18,19 @@ from django.urls import path
 from django.conf.urls import include
 from apps.views import *
 
+# 이미지
+from django.conf import settings
+from django.conf.urls.static import static
+
 # rest_framework
 from rest_framework import routers
 from apps.memo.apis import *
-from apps.label.apis import *
+from apps.keyword.apis import *
 
+# router 지정
 router = routers.DefaultRouter()
 router.register(r'memos', MemoViewSet)
-router.register(r'labels', LabelViewSet)
+router.register(r'keywords', KeywordViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,5 +48,10 @@ urlpatterns = [
     path("memo/", include("apps.memo.urls")),
 
     # 키워드 관련 화면
-    path("label/", include("apps.label.urls")),
+    path("keyword/", include("apps.keyword.urls")),
 ]
+if settings.DEBUG : 
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.models import Users, Memos
+from apps.models import Users, Memos, Keywords
 
 
 # 유저 Serializer
@@ -19,3 +19,23 @@ class MemoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Memos
         fields = "__all__"
+
+    # 메모 생성
+    def create(self, request, data, commit=True):
+        # 데이터 지정
+        instance = Memos()
+        instance.writer_id = request.user.id
+        instance.title = data.get("title")
+        instance.content = data.get("content")
+        instance.img = (lambda x : None if x.get('img') == None else x['img'])(request.FILES)
+
+        # 키워드
+        keywords = data.get('keywords')
+
+        if commit:
+            # 메모 생성
+            instance.save()
+
+            # 키워드가 있다면 키워드 추가
+            if keywords:
+                list(map(lambda x : instance.keywords.add(Keywords.objects.get(pk=x)), keywords))

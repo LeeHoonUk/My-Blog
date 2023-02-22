@@ -9,7 +9,7 @@
 
     <div class="row">
         <!-- Basic -->
-        <form class="col-md-12" name="testForm">
+        <form class="col-md-12" name="testForm" onsubmit="return false">
             {% csrf_token %}
             <div class="card mb-4">
                 <h5 class="card-header" style = "color : red; text-align : center">❗️ 제목과 내용은 반드시 입력하여 주세요!</h5>
@@ -47,21 +47,21 @@
                     
                     <div class="divider">
                         <div class="divider-text">
-                            키워드를 선택하여 주세요
+                            키워드를 선택하여 주세요 (다중 선택 - ctrl / command + click)
                         </div>
                     </div>
                     <div class="mb-3">
-                        {% if labels %}
-                            <select class="form-select" id="exampleFormControlSelect2" name="labels" aria-label="Multiple select example" multiple>
-                                {% for l in labels %}
-                                    <option style="text-align:center;margin-top:7px;cursor:pointer" value="{{l.id}}">
-                                        {{l.label}}
+                        {% if keywords %}
+                            <select class="form-select" id="exampleFormControlSelect2" name="keywords" aria-label="Multiple select example" style="height : 300px" multiple>
+                                {% for k in keywords %}
+                                    <option style="text-align:center;margin-top:7px;cursor:pointer" value="{{k.id}}">
+                                        {{k.keyword}}
                                     </option>
                                 {% endfor %}
                             </select>
                         {% else %}
                             <div class="keyword_link">
-                                <a id="keyword" href="{% url 'l-write' %}">
+                                <a id="keyword" href="{% url 'k-write' %}">
                                     현재 생성된 키워드가 없습니다. 필요한 키워드 등록하기
                                 </a>         
                             </div>
@@ -80,4 +80,53 @@
 <div class="buy-now">
     <a style="color:white" class="btn btn-danger btn-buy-now btnAjax">메모 등록하기</a>
 </div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+
+    let btnAjax = document.querySelector('.btnAjax');
+    
+    btnAjax.addEventListener('click', e => {
+        
+        var queryString = $("form[name=testForm]")[0] ;
+        var formData = new FormData(queryString);
+        
+        $.ajax({
+            url : '/apis/memos/',
+            headers: {'X-CSRFToken': csrftoken},
+            type : 'POST',
+            enctype:'multipart/form-data',
+            data : formData,
+            contentType: false,
+            processData : false,
+            success:function(data){
+                Swal.fire('Good','작성이 완료되었습니다.','success')
+                setTimeout('location.href="{% url 'm-write' %}"',1000)
+            },
+            error: function(e){
+                Swal.fire('유효하지 않은 정보입니다.',e.responseJSON,'error')
+            }
+        })
+    });
+    
+    
+</script>
 {% endblock %}
