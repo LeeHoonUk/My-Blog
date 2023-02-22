@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from apps.models import Users, Memos, Keywords
 
-
 # 유저 Serializer
 class UserSerializer(serializers.ModelSerializer):
 
@@ -14,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 # 메모 Serializer
 class MemoSerializer(serializers.ModelSerializer):
     writer = UserSerializer(read_only=True)
+    keywords = serializers.SlugRelatedField(many=True, read_only=True, slug_field='keyword')
 
     # Users Model 에서 모든 Fields 선택
     class Meta:
@@ -30,8 +30,8 @@ class MemoSerializer(serializers.ModelSerializer):
         instance.img = (lambda x : None if x.get('img') == None else x['img'])(request.FILES)
 
         # 키워드
-        keywords = data.get('keywords')
-
+        keywords = request.data.getlist('keywords')
+        
         if commit:
             # 메모 생성
             instance.save()

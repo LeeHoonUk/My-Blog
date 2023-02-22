@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block statics %}
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+{% endblock %}  
+
+{% block content %}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">우리의 메모 모음집</h4>
+    <!-- Images -->
+    <h5 class="pb-1 mb-4">필요한 내용을 확인하여 주세요</h5>
+    <div id = "vue_div" class="row mb-5">
+        <div v-if="[[memos]] == ''" class="col-md-6 col-xl-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">메모를 작성하여 주세요</h5>
+                    <p class="card-text">
+                        현재 메모가 작성되어 있지 않습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div v-else="" class="col-md-6 col-xl-4" v-for="m in memos">
+            <div class="card mb-3">
+                <div v-if="[[m.img]] == ''" >
+                    <img  class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" style="height:280px;" />
+                </div>
+                <div v-else=""> 
+                    <img class="card-img-top" :src="[[m.img]]" alt="Card image cap" style="height:280px;" />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{m.title}}</h5>
+                    <p v-if="[[m.keywords]] == ''" class="card-text">
+                        <b> 키워드가 없습니다. </b> <br/>
+                    </p>
+                    <p v-else="" class="card-text">
+                        <span style="color : green;" v-for="mo in m.keywords">
+                            #[[mo]] &nbsp;
+                        </span>
+                        <br/> 
+                    </p>
+                    <p class="card-text">
+                        ❤️ &nbsp; : &nbsp; [[m.like]]
+                        <a style="float:right" href="#" class="card-link">자세히 알아보기</a>
+                    </p>
+
+                    
+                </div>
+            </div>
+        </div>
+        <div class="demo-inline-spacing">
+            <!-- Basic Pagination -->
+            <nav style="display:flex;justify-content : center;" aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if memo.has_previous %}
+                        <li class="page-item first">
+                            <a class="page-link" href="?p=1">
+                                <i class="tf-icon fa-solid fa-angles-left"></i>                                
+                            </a>
+                        </li>
+                        <li class="page-item prev">
+                            <a class="page-link" href="?p={{memo.previous_page_number }}">
+                                <i class="tf-icon fa-solid fa-angle-left"></i>                                
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link">❌</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <a class="page-link">{{memo.number}} / {{memo.paginator.num_pages}}</a>
+                    </li>
+                    {% if memo.has_next %}
+                        <li class="page-item next">
+                            <a class="page-link" href="?p={{memo.next_page_number }}">
+                                <i class="tf-icon fa-solid fa-angle-right"></i>                                
+                            </a>
+                        </li>
+                        <li class="page-item last">
+                            <a class="page-link" href="?p={{memo.paginator.num_pages }}">
+                                <i class="tf-icon fa-solid fa-angles-right"></i>                                
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link">❌</a>
+                        </li>
+                    {% endif %}
+                    
+              </ul>
+            </nav>
+            <!--/ Basic Pagination -->
+        </div>
+    </div>
+    <!--/ Images -->
+</div>
+<!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<div class="buy-now">
+    <a href="{% url 'm-write'%}"class="btn btn-danger btn-buy-now">메모 작성하기</a>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    let vm = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#vue_div',
+        data: {
+            memos: null
+        },
+        mounted() {
+            this.getList();
+        },
+        methods: {
+            getList: function () {
+                // $("#vue_div").LoadingOverlay("show");
+                axios.get(`/apis/memos/`,
+                ).then(function (response) {
+                    vm.memos = response.data.results
+                }).catch(function (e) {
+                }).finally(function () {
+                    // $("#vue_div").LoadingOverlay("hide");
+                });
+            }
+        }
+    })
+</script>
+{% endblock %}

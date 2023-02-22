@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from apps.models import Keywords
+from apps.models import Keywords, Memos
 from apps.forms.memo_forms import *
 
 
@@ -19,3 +19,13 @@ def memo_create(request):
     keywords = Keywords.objects.all()
 
     return render(request, "memo/create.html", {"form": form, "keywords": keywords, "nav_check": nav_check})
+
+def memo_list(request):
+
+    # sidebar active
+    nav_check = "sidebar_memo"
+
+    # 페이지 구현
+    page = int(request.GET.get("p", 1))
+
+    return render(request, "memo/list.html", {"nav_check": nav_check})
