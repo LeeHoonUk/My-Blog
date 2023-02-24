@@ -29,3 +29,10 @@ def memo_list(request):
     page = int(request.GET.get("p", 1))
 
     return render(request, "memo/list.html", {"nav_check": nav_check})
+
+def memo_view(request, memo_id):
+
+    # sidebar active
+    nav_check = "sidebar_memo"
+
+    return render(request, "memo/retrieve.html", {"nav_check": nav_check, "memo_id" : memo_id})

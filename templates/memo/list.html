@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.js"></script>
 {% endblock %}  
 
 {% block content %}
@@ -50,7 +50,7 @@
                     </p>
                     <p class="card-text">
                         ❤️ &nbsp; : &nbsp; [[m.like]]
-                        <a style="float:right" href="#" class="card-link">자세히 알아보기</a>
+                        <a style="float:right" :href=`/memo/view/${m.id}` class="card-link">자세히 알아보기</a>
                     </p>
 
                     
@@ -126,14 +126,16 @@
         },
         methods: {
             getList: function () {
-                // $("#vue_div").LoadingOverlay("show");
+                $("#vue_div").LoadingOverlay("show");
+                
                 axios.get(`/apis/memos/`,
                 ).then(function (response) {
-                    vm.memos = response.data.results
+                    vm.memos = response.data.results;
                 }).catch(function (e) {
                 }).finally(function () {
-                    // $("#vue_div").LoadingOverlay("hide");
+                    
                 });
+                $("#vue_div").LoadingOverlay("hide");
             }
         }
     })

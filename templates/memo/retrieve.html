@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block statics %}
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.js"></script>
+{% endblock %}  
+
+{% block content %}
+<!-- Content -->
+
+<div id = "vue_div" class="container-xxl flex-grow-1 container-p-y">
+    <h4 v-if="[[memos]] == ''" class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">작성자 /</span> 
+        작성자가 없습니다.
+    </h4>
+    <h4 v-else="" class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">작성자 /</span> 
+        [[memos.writer.username]]
+    </h4>
+    <!-- Horizontal -->
+    <h5 v-if="[[memos ? memos.keywords:'없음']] == ''" class="pb-1 mb-4">
+        <span class="text-muted fw-light">키워드 /</span>
+        작성된 키워드가 없습니다.
+    </h5>
+    <h5 v-else="" class="pb-1 mb-4" >
+        <span class="text-muted fw-light">라벨 /</span>
+        <div v-for="m in memos ? memos.keywords:'없음'" style="display:inline-block">
+            # [[m]] &nbsp;
+        </div>
+    </h5>
+    
+    <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-2" >
+                        <div v-if="[[memos ? memos.img:'']] == ''" >
+                            <img  class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" style="height:300px;" />
+                        </div>
+                        <div v-else=""> 
+                            <img class="card-img-top" :src="[[memos.img]]" alt="Card image cap" style="height:250px;" />
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="card-body">
+                            <h3 style="text-align:center" class="card-title">[[memos ? memos.title:'']]</h3>
+                            <div class="divider">
+                                <div class="divider-text">
+                                    Text
+                                </div>
+                            </div>
+                            <br/><br/>
+                            <pre style="font-size:22px"class="card-text">[[memos ? memos.content:'']]</pre>
+                            <br/><br/>
+                            <div class="divider">
+                                <div class="divider-text">
+                                    <i class="fa-solid fa-feather-pointed"></i>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                등록일 : [[memos ? memos.created_at.substr(0, 10):'']]
+                            </p>
+                            <p class="card-text">
+                                ❤️ : [[memos ? memos.like:'']]
+                            </p>
+                            <div class="btnAjax" style="cursor:pointer;font-size:33px;text-align:right">
+                                ❤️ 좋아요 ❤️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+    <!--/ Horizontal -->
+</div>
+<!-- / Content -->
+{% endblock %}
+
+{% block link %}
+
+<div class="buy-now">
+    <a href="#" class="btn btn-danger btn-buy-now">메모 수정하기</a>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script type="text/javascript">
+    let vm = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#vue_div',
+        data: {
+            memos: null
+        },
+        mounted() {
+            this.getList();
+        },
+        methods: {
+            getList: function () {
+                $("#vue_div").LoadingOverlay("show");
+                
+                axios.get(`/apis/memos/{{memo_id}}/`,
+                ).then(function (response) {
+                    vm.memos = response.data;
+                }).catch(function (e) {
+                }).finally(function () {
+                    
+                });
+                $("#vue_div").LoadingOverlay("hide");
+            }
+        }
+    })
+</script>
+{% endblock %}
