@@ -18,7 +18,7 @@
     <!-- Images -->
     <h5 class="pb-1 mb-4">필요한 내용을 확인하여 주세요</h5>
     <div id = "vue_div" class="row mb-5">
-        <div v-if="[[memos]] == ''" class="col-md-6 col-xl-4">
+        <div v-if="[[memos ? memos.results:'']] == ''" class="col-md-6 col-xl-4">
             <div class="card mb-3">
                 <img class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" />
                 <div class="card-body">
@@ -29,7 +29,11 @@
                 </div>
             </div>
         </div>
-        <div v-else="" class="col-md-6 col-xl-4" v-for="m in memos">
+        <div v-else="" class="col-md-6 col-xl-4" v-for="m in memos.results">
+            <form id="frm" action="/memo/view" method="POST">
+                {% csrf_token %}    
+                <input type="hidden" name="id" :value="[[m.id]]" value="이동시킬밸류">
+            </form>
             <div class="card mb-3">
                 <div v-if="[[m.img]] == ''" >
                     <img  class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" style="height:280px;" />
@@ -38,7 +42,7 @@
                     <img class="card-img-top" :src="[[m.img]]" alt="Card image cap" style="height:280px;" />
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{m.title}}</h5>
+                    <h5 style="text-align:center" class="card-title">[[m.title]]</h5>
                     <p v-if="[[m.keywords]] == ''" class="card-text">
                         <b> 키워드가 없습니다. </b> <br/>
                     </p>
@@ -50,10 +54,8 @@
                     </p>
                     <p class="card-text">
                         ❤️ &nbsp; : &nbsp; [[m.like]]
-                        <a style="float:right" :href=`/memo/view/${m.id}` class="card-link">자세히 알아보기</a>
+                        <a href="#" style="float:right" onclick="javascript:document.getElementById('frm').submit();" class="card-link">자세히 알아보기</a>
                     </p>
-
-                    
                 </div>
             </div>
         </div>
@@ -61,42 +63,40 @@
             <!-- Basic Pagination -->
             <nav style="display:flex;justify-content : center;" aria-label="Page navigation">
                 <ul class="pagination">
-                    {% if memo.has_previous %}
-                        <li class="page-item first">
-                            <a class="page-link" href="?p=1">
-                                <i class="tf-icon fa-solid fa-angles-left"></i>                                
-                            </a>
-                        </li>
-                        <li class="page-item prev">
-                            <a class="page-link" href="?p={{memo.previous_page_number }}">
-                                <i class="tf-icon fa-solid fa-angle-left"></i>                                
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="page-item">
-                            <a class="page-link">❌</a>
-                        </li>
-                    {% endif %}
-                    <li class="page-item active">
-                        <a class="page-link">{{memo.number}} / {{memo.paginator.num_pages}}</a>
-                    </li>
-                    {% if memo.has_next %}
-                        <li class="page-item next">
-                            <a class="page-link" href="?p={{memo.next_page_number }}">
-                                <i class="tf-icon fa-solid fa-angle-right"></i>                                
-                            </a>
-                        </li>
-                        <li class="page-item last">
-                            <a class="page-link" href="?p={{memo.paginator.num_pages }}">
-                                <i class="tf-icon fa-solid fa-angles-right"></i>                                
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="page-item">
-                            <a class="page-link">❌</a>
-                        </li>
-                    {% endif %}
                     
+                    <li v-if="[[memos ? memos.previous:'']] != ''" class="page-item first">
+                        <a class="page-link" href="?p=1">
+                            <i class="tf-icon fa-solid fa-angles-left"></i>                                
+                        </a>
+                    </li>
+
+                    <li v-if="[[memos ? memos.previous:'']] != ''" class="page-item prev">
+                        <a class="page-link" :href=`?p=${pages-1}`>
+                            <i class="tf-icon fa-solid fa-angle-left"></i>                                
+                        </a>
+                    </li>
+                    <li v-else="" class="page-item">
+                        <a class="page-link">❌</a>
+                    </li>
+                    
+                    <li class="page-item active">
+                        <a class="page-link">{{p}} / [[count]]</a>
+                    </li>
+                    
+                    <li v-if="[[memos ? memos.next:'']] != ''" class="page-item next">
+                        <a class="page-link" :href=`?p=${pages+1}`>
+                            <i class="tf-icon fa-solid fa-angle-right"></i>                                
+                        </a>
+                    </li>
+                    
+                    <li v-if="[[memos ? memos.next:'']] != ''" class="page-item last">
+                        <a class="page-link" :href=`?p=${count}`>
+                            <i class="tf-icon fa-solid fa-angles-right"></i>                                
+                        </a>
+                    </li>                
+                    <li v-else="" class="page-item">
+                        <a class="page-link">❌</a>
+                    </li>
               </ul>
             </nav>
             <!--/ Basic Pagination -->
@@ -119,7 +119,9 @@
         delimiters: ['[[', ']]'],
         el: '#vue_div',
         data: {
-            memos: null
+            memos : null,
+            count : 0,
+            pages : {{p}}
         },
         mounted() {
             this.getList();
@@ -128,9 +130,10 @@
             getList: function () {
                 $("#vue_div").LoadingOverlay("show");
                 
-                axios.get(`/apis/memos/`,
+                axios.get(`/apis/memos/?page={{p}}`,
                 ).then(function (response) {
-                    vm.memos = response.data.results;
+                    vm.memos = response.data;
+                    vm.count = Math.ceil(response.data.count / 2)
                 }).catch(function (e) {
                 }).finally(function () {
                     

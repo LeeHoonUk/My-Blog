@@ -7,5 +7,5 @@ urlpatterns = [
     # 메모 리스트
     path("list", memo_list, name="m-list"),
     # 메모 상세보기
-    path("view/<int:memo_id>", memo_view, name="m-view"),
+    path("view", memo_view, name="m-view"),
 ]
