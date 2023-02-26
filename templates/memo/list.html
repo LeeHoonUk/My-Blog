@@ -30,7 +30,7 @@
             </div>
         </div>
         <div v-else="" class="col-md-6 col-xl-4" v-for="m in memos.results">
-            <form id="frm" action="/memo/view" method="POST">
+            <form :id=`frm${m.id}` action="/memo/view" method="POST">
                 {% csrf_token %}    
                 <input type="hidden" name="id" :value="[[m.id]]" value="이동시킬밸류">
             </form>
@@ -54,7 +54,7 @@
                     </p>
                     <p class="card-text">
                         ❤️ &nbsp; : &nbsp; [[m.like]]
-                        <a href="#" style="float:right" onclick="javascript:document.getElementById('frm').submit();" class="card-link">자세히 알아보기</a>
+                        <a href="#" style="float:right" :onclick=`javascript:document.getElementById('frm${m.id}').submit();` class="card-link">자세히 알아보기</a>
                     </p>
                 </div>
             </div>

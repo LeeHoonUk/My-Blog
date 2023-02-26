@@ -1,6 +1,8 @@
 from rest_framework import viewsets, permissions, status
 from .serializers import MemoSerializer
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from django.http.response import Http404
 
 from apps.models import Memos
 
@@ -28,3 +30,15 @@ class MemoViewSet(viewsets.ModelViewSet):
         else:
             rtn = "유효하지 않은 정보입니다."
             return Response(rtn, status=status.HTTP_412_PRECONDITION_FAILED)
+
+    # 좋아요 구현    
+    @action(detail=True, methods=["get", "post"])
+    def add_click(self, request, pk=None):
+        queryset = self.get_queryset().filter(pk=pk)
+
+        if not queryset.exists():
+            raise Http404
+        rtn = queryset.first().clicked()
+        serializer = MemoSerializer(rtn)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
