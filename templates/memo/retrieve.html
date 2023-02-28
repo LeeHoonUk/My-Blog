@@ -29,7 +29,7 @@
     </h5>
     <h5 v-else="" class="pb-1 mb-4" >
         <span class="text-muted fw-light">키워드 /</span>
-        <div v-for="m in memos ? memos.keywords:'없음'" style="display:inline-block">
+        <div v-for="m in memos ? memos.keywords:'없음'" style="display:inline-block; color : green;">
             # [[m]] &nbsp;
         </div>
     </h5>
@@ -48,27 +48,46 @@
                     </div>
                     <div class="col-md-10">
                         <div class="card-body">
-                            <h3 style="text-align:center" class="card-title">[[memos ? memos.title:'']]</h3>
+                            <h3 v-if="[[memos ? memos.title:'']] == ''" style="text-align:center" class="card-title">
+                                등록되지 않은 메모
+                            </h3>
+                            <h3 v-else="" style="text-align:center" class="card-title">
+                                [[memos ? memos.title:'']]
+                            </h3>
                             <div class="divider">
                                 <div class="divider-text">
                                     Text
                                 </div>
                             </div>
                             <br/><br/>
-                            <pre style="font-size:22px"class="card-text">[[memos ? memos.content:'']]</pre>
+                            <p v-if="[[memos ? memos.content:'']] == ''" class="card-text"
+                                style="font-size:22px; text-align:center; color : red">
+                                올바르지 않은 경로 입니다.<br/>
+                                다시 설정하여 주세요!
+                            </p>
+                            <pre v-else="" style="font-size:22px"class="card-text">
+[[memos ? memos.content:'']]
+                            </pre>
                             <br/><br/>
                             <div class="divider">
                                 <div class="divider-text">
                                     <i class="fa-solid fa-feather-pointed"></i>
                                 </div>
                             </div>
-                            <p class="card-text">
+                            <p v-if="[[memos ? memos.created_at:'']] == ''" class="card-text"></p>
+                            <p v-else="" class="card-text">
                                 등록일 : [[memos ? memos.created_at.substr(0, 10):'']]
                             </p>
-                            <p class="card-text">
+                            <p v-if="[[memos ? memos.created_at:'']] == ''" class="card-text"></p>
+                            <p v-else="" class="card-text">
                                 ❤️ : [[memos ? memos.like:'']]
                             </p>
-                            <div class="btnAjax" style="cursor:pointer;font-size:33px;text-align:right">
+                            <div v-if="[[memos]] == ''" class="btnAjax" 
+                                style="cursor:pointer;font-size:33px;text-align:center; color:skyblue">
+                                메모 리스트 이동하기
+                            </div>
+                            <div v-else="" class="btnAjax" 
+                                style="cursor:pointer;font-size:33px;text-align:right">
                                 ❤️ 좋아요 ❤️
                             </div>
                         </div>
@@ -84,16 +103,24 @@
 {% endblock %}
 
 {% block link %}
+<form id='frm' action="/memo/rewrite" method="POST">
+    {% csrf_token %}    
+    <input type="hidden" name="id" value="{{memo_id}}">
+</form>
+<div class="buy-now">
+    <a herf="#" class="btn btn-danger btn-buy-now" style="color:white; margin-right : 120px"
+        onclick="javascript:document.getElementById('frm').submit();">
+        메모 수정하기
+    </a>
+</div>
 
 <div class="buy-now">
-    <a href="#" class="btn btn-danger btn-buy-now">메모 수정하기</a>
+    <a style="color:white;" class="btn btn-danger btn-buy-now btnAjax2">메모 삭제</a>
 </div>
 
 {% endblock %}
 
 {% block script %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
 <script type="text/javascript">
     let vm = new Vue({
         delimiters: ['[[', ']]'],
@@ -131,9 +158,59 @@
                 setTimeout('location.reload();',500)
             },
             error: function(e){
-                Swal.fire('로그인 후 이용해주세요',e,'error')
+                Swal.fire('올바르지 않은 경로입니다.',e,'error')
+                location.href="{% url 'm-list' %}"
             }
         })
     });
+    
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+
+    let btnAjax2 = document.querySelector('.btnAjax2');
+    
+    btnAjax2.addEventListener('click', e => {
+        Swal.fire({
+            title: '정말로 삭제하실건가요?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: '예',
+            denyButtonText: `아니요`,
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                $.ajax({
+                    url : '/apis/memos/{{memo_id}}/',
+                    headers: {'X-CSRFToken': csrftoken},
+                    type : 'DELETE',
+                    success:function(data){
+                        Swal.fire('ㅠㅠ','삭제가 완료되었습니다.','success')
+                        setTimeout('location.href="{% url 'm-list' %}"',1000)
+                    },
+                    error: function(e){
+                        Swal.fire('실패',e,'error')
+                    }
+                })
+            } else if (result.isDenied) {
+                Swal.fire('좋은 선택입니다!', '', 'info')
+            }
+        })
+        
+    });
+    
 </script>
 {% endblock %}

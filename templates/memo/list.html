@@ -133,7 +133,7 @@
                 axios.get(`/apis/memos/?page={{p}}`,
                 ).then(function (response) {
                     vm.memos = response.data;
-                    vm.count = Math.ceil(response.data.count / 2)
+                    vm.count = Math.ceil(response.data.count / 9)
                 }).catch(function (e) {
                 }).finally(function () {
                     

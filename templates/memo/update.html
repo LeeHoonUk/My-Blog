@@ -1,0 +1,188 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block statics %}
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.js"></script>
+{% endblock %}  
+
+{% block content %}
+<!-- Content -->
+<div id = "vue_div" class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        ✏️ &nbsp; 메모를 수정하여 주세요
+    </h4>
+    <h5 v-if="[[memos ? memos.keywords:'없음']] == ''" class="pb-1 mb-4">
+        <span class="text-muted fw-light">키워드 /</span>
+        작성된 키워드가 없습니다.
+    </h5>
+    <h5 v-else="" class="pb-1 mb-4" >
+        <span class="text-muted fw-light">키워드 /</span>
+        <div v-for="m in memos ? memos.keywords:'없음'" style="display:inline-block; color : green;">
+            # [[m]] &nbsp;
+        </div>
+    </h5>
+    <div class="row">
+        <!-- Basic -->
+        <form class="col-md-12" name="testForm" >
+            {% csrf_token %}
+            <div class="card mb-4">
+                <div class="card-body demo-vertical-spacing demo-only-element">
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon11">📌</span>
+                        <input v-if="[[memos ? memos.writer:'']] == ''" type="text" 
+                            class="form-control" value="알 수 없는 유저" readonly="readonly"
+                        />
+                        <input v-else="" type="text" class="form-control"
+                            :value="[[memos.writer ? memos.writer.username:'']]" readonly="readonly"
+                        />
+                    </div>  
+                    <div class="divider">
+                        <div class="divider-text">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon11">제목</span>
+                        <input v-if="[[memos ? memos.title:'']] == ''" type="text" 
+                            class="form-control" value="알 수 없는 메모" style= 'height:60px;font-size:18px'
+                        />
+                        <input v-else="" type="text" class="form-control" name="title"
+                            :value="[[memos ? memos.title:'']]" style= 'height:60px;font-size:18px'
+                        />
+                    </div>
+                    <div class="divider">
+                        <div class="divider-text">
+                            Text
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">메인 내용</span>
+                        <textarea v-if="[[memos ? memos.title:'']] == ''" rows="15" 
+                            class="form-control" aria-label="With textarea">알 수 없는 메모</textarea>
+                        <textarea v-else="" rows="15" 
+                            name="content" class="form-control" aria-label="With textarea">[[memos ? memos.content:'']]</textarea>
+                    </div>
+                    <br/>
+                    <div class="divider">
+                        <div class="divider-text">
+                            변경을 원하시면 새로운 이미지 및 키워드를 추가하여 주세요 (다중 선택 - ctrl / command + click)
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <input name="img" class="form-control" type="file" id="formFile" />
+                    </div>       
+                    <div class="mb-3">
+                        {% if keywords %}
+                            <select class="form-select" id="exampleFormControlSelect2" name="keywords" aria-label="Multiple select example" style="height : 300px" multiple>
+                                {% for k in keywords %}
+                                    <option style="text-align:center;margin-top:7px;cursor:pointer" value="{{k.id}}">
+                                        {{k.keyword}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <div class="keyword_link">
+                                <a id="keyword" href="{% url 'k-write' %}">
+                                    현재 생성된 키워드가 없습니다. 필요한 키워드 등록하기
+                                </a>         
+                            </div>
+                        {% endif %}
+                    </div>
+                    <br/><br/><br/><br/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+  <!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<form id='frm' action="/memo/view" method="POST">
+    {% csrf_token %}    
+    <input type="hidden" name="id" value="{{memo_id}}">
+</form>
+<div class="buy-now">
+    <a style="color:white;" class="btn btn-danger btn-buy-now btnAjax">메모 수정</a>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    let vm = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#vue_div',
+        data: {
+            memos: null
+        },
+        mounted() {
+            this.getList();
+        },
+        methods: {
+            getList: function () {
+                $("#vue_div").LoadingOverlay("show");
+                
+                axios.get(`/apis/memos/{{memo_id}}/`,
+                ).then(function (response) {
+                    vm.memos = response.data;
+                }).catch(function (e) {
+                }).finally(function () {
+                    
+                });
+                $("#vue_div").LoadingOverlay("hide");
+            }
+        }
+    })
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+
+    let btnAjax = document.querySelector('.btnAjax');
+    
+    btnAjax.addEventListener('click', e => {
+
+        var queryString = $("form[name=testForm]")[0] ;
+        var formData = new FormData(queryString);
+        
+        $.ajax({
+            url : '/apis/memos/{{memo_id}}/',
+            headers: {'X-CSRFToken': csrftoken},
+            type : 'PUT',
+            enctype:'multipart/form-data',
+            data : formData,
+            contentType: false,
+            processData : false,
+            success:function(data){
+                Swal.fire('Good','수정이 완료되었습니다.','success');
+                setTimeout("javascript:document.getElementById('frm').submit();",1000)
+                
+            },
+            error: function(e){
+                Swal.fire('유효하지 않은 정보입니다.',e.responseJSON,'error')
+            }
+        })
+    });
+
+</script>
+{% endblock %}

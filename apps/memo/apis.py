@@ -23,10 +23,21 @@ class MemoViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             rtn = serializer.create(request, serializer.data)
-            if rtn == '이미 등록된 라벨입니다.':
-                return Response(rtn, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-            else :
-                return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
+
+            return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
+        else:
+            rtn = "유효하지 않은 정보입니다."
+            
+            return Response(rtn, status=status.HTTP_412_PRECONDITION_FAILED)
+        
+    # PUT METHOD
+    def update(self, request, pk=None):
+
+        serializer = MemoSerializer(data=request.data)
+
+        if serializer.is_valid():
+            rtn = serializer.update(request, serializer.data, pk)
+            return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
             rtn = "유효하지 않은 정보입니다."
             return Response(rtn, status=status.HTTP_412_PRECONDITION_FAILED)

@@ -8,4 +8,6 @@ urlpatterns = [
     path("list", memo_list, name="m-list"),
     # 메모 상세보기
     path("view", memo_view, name="m-view"),
+    # 메모 수정
+    path("rewrite", memo_update, name="m-rewrite"),
 ]

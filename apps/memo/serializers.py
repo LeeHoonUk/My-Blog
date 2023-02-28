@@ -39,3 +39,30 @@ class MemoSerializer(serializers.ModelSerializer):
             # 키워드가 있다면 키워드 추가
             if keywords:
                 list(map(lambda x : instance.keywords.add(Keywords.objects.get(pk=x)), keywords))
+        
+        return instance
+    
+    # 메모 수정
+    def update(self, request, data, pk, commit=True):
+        # 데이터 지정
+        instance = Memos.objects.get(pk=pk)
+        instance.title = data.get('title')
+        instance.content = data.get('content')
+
+        # 키워드
+        keywords = request.data.getlist('keywords')
+
+        if commit:
+            # 이미지 추가
+            if request.FILES.get('img') != None:
+                instance.img = request.FILES['img']
+
+            # 메모 수정    
+            instance.save()
+
+            # 키워드가 있다면 키워드 추가
+            if keywords:
+                instance.keywords.clear()
+                list(map(lambda x : instance.keywords.add(Keywords.objects.get(pk=x)), keywords))
+
+        return instance

@@ -38,6 +38,25 @@ def memo_view(request):
     nav_check = "sidebar_memo"
 
     if request.method == "POST":
-        return render(request, "memo/retrieve.html", {"nav_check" : nav_check, "memo_id" : request.POST['id']})
+        return render(request, "memo/retrieve.html", {
+            "nav_check" : nav_check, "memo_id" : request.POST['id']
+        })
     else:
         return render(request, "memo/retrieve.html", {"nav_check" : nav_check})
+    
+# 메모 수정 = 로그인 시 페이지 접근 가능
+@login_required
+def memo_update(request):
+
+    # sidebar active
+    nav_check = "sidebar_memo"
+
+    # 모든 키워드 가져오기
+    keywords = Keywords.objects.all()
+
+    if request.method == "POST":
+        return render(request, "memo/update.html", {
+            "nav_check" : nav_check, "memo_id" : request.POST['id'], "keywords": keywords
+        })
+    else:
+        return render(request, "memo/update.html", {"nav_check" : nav_check})
