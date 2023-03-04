@@ -151,7 +151,7 @@
 
     btnAjax.addEventListener('click', e => {
         $.ajax({
-            url : '/apis/memos/{{memo_id}}/add_click/',
+            url : '/apis/memos/{{memo_id}}/like/',
             type : 'GET',
             success:function(data){
                 Swal.fire('좋아요!','좋은 의견 감사합니다.','success')

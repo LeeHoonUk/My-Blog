@@ -44,7 +44,7 @@ class MemoViewSet(viewsets.ModelViewSet):
 
     # 좋아요 구현    
     @action(detail=True, methods=["get", "post"])
-    def add_click(self, request, pk=None):
+    def like(self, request, pk=None):
         queryset = self.get_queryset().filter(pk=pk)
 
         if not queryset.exists():

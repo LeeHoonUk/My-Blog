@@ -90,6 +90,11 @@ class MemosTestCase(APITestCase):
 
         self.assertEqual(request.status_code, 201)
 
+        # 메모 좋아요 
+        request = c.get("/apis/memos/1/like/", body)
+
+        self.assertEqual(request.status_code, 201)
+
         # 메모 삭제
         request = c.delete("/apis/memos/1/", body)
 
