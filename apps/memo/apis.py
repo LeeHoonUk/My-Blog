@@ -3,6 +3,9 @@ from .serializers import MemoSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.http.response import Http404
+from django.http import JsonResponse
+from django.core import serializers
+import json
 
 from apps.models import Memos
 
@@ -49,7 +52,25 @@ class MemoViewSet(viewsets.ModelViewSet):
 
         if not queryset.exists():
             raise Http404
+        
         rtn = queryset.first().clicked()
+
         serializer = MemoSerializer(rtn)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    # 키워드 검색
+    @action(detail=False, methods=["get", "post"])
+    def search(self, request):
+        
+        # 키워드 및 값 받아오기
+        relation = request.GET.get('relation', '내용 검색')
+        key = request.GET.get('key', '')
+
+        queryset = (lambda rel, q : q(keywords__keyword__icontains=key) if rel == '키워드 검색' else (
+            q(content__icontains=key) if rel == '내용 검색' else q(title__icontains=key)
+        ))(relation, self.get_queryset().filter)
+        
+        serializer = json.loads(serializers.serialize('json', queryset, ensure_ascii=False))
+
+        return JsonResponse({'memos' : serializer}, status=status.HTTP_201_CREATED)
