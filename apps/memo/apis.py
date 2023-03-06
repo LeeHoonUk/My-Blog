@@ -3,11 +3,9 @@ from .serializers import MemoSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.http.response import Http404
-from django.http import JsonResponse
-from django.core import serializers
-import json
 
 from apps.models import Memos
+import math
 
 
 # 메모 ViewSet
@@ -67,10 +65,25 @@ class MemoViewSet(viewsets.ModelViewSet):
         relation = request.GET.get('relation', '내용 검색')
         key = request.GET.get('key', '')
 
+        # 포함하는 값 쿼리
         queryset = (lambda rel, q : q(keywords__keyword__icontains=key) if rel == '키워드 검색' else (
-            q(content__icontains=key) if rel == '내용 검색' else q(title__icontains=key)
+            q(content__icontains=key).all() if rel == '내용 검색' else q(title__icontains=key)
         ))(relation, self.get_queryset().filter)
-        
-        serializer = json.loads(serializers.serialize('json', queryset, ensure_ascii=False))
 
-        return JsonResponse({'memos' : serializer}, status=status.HTTP_201_CREATED)
+        # 페이지 구현
+        page = int(request.GET.get("page", 1))
+        page_count = math.ceil(len(queryset)/9)
+
+        page_queryset = self.paginate_queryset(queryset)
+
+        serializer = MemoSerializer(page_queryset, many=True)
+
+        # 앞으로가기 / 뒤로가기
+        page_next = (lambda p, pc : f"{request.path}?page={page+1}" if p < pc else None)(page, page_count)
+        page_previous = (lambda p : f"{request.path}?page={page-1}" if p > 1 else None)(page)
+        
+        return Response({
+            "count" : len(queryset), "next" : page_next, 
+            "previous" : page_previous, "results" : serializer.data
+        }, status=status.HTTP_201_CREATED)
+        
