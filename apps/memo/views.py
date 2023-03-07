@@ -60,3 +60,19 @@ def memo_update(request):
         })
     else:
         return render(request, "memo/update.html", {"nav_check" : nav_check})
+
+def memo_find(request):
+
+    # sidebar active
+    nav_check = "sidebar_memo"
+
+    # 키워드 및 값 받아오기
+    relation = request.GET.get('relation', '내용 검색')
+    key = request.GET.get('key', '')
+
+    # 페이지 구현
+    page = int(request.GET.get("p", 1))
+
+    return render(request, "memo/find.html", {
+        "nav_check": nav_check, "key": key, "relation": relation, 'p' : page
+    })

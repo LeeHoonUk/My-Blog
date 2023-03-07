@@ -13,7 +13,7 @@
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <!-- Search -->
-        <form class="navbar-nav align-items-center" action="#">
+        <form class="navbar-nav align-items-center" action="{% url 'm-find' %}">
             <div class="nav-item d-flex align-items-center">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input
@@ -23,6 +23,7 @@
                     aria-label="Search..."
                     name="key"
                 />
+                <input type="hidden" name="relation" value="제목 검색" />
             </div>
         </form>
         <!-- /Search -->
