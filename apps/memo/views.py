@@ -73,6 +73,9 @@ def memo_find(request):
     # 페이지 구현
     page = int(request.GET.get("p", 1))
 
+    # 모든 키워드 가져오기
+    keywords = Keywords.objects.all()
+
     return render(request, "memo/find.html", {
-        "nav_check": nav_check, "key": key, "relation": relation, 'p' : page
+        "nav_check": nav_check, "key": key, "relation": relation, 'p' : page, 'keywords' : keywords
     })

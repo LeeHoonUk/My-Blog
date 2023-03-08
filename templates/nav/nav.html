@@ -23,7 +23,11 @@
                     aria-label="Search..."
                     name="key"
                 />
-                <input type="hidden" name="relation" value="제목 검색" />
+                <select name="relation" class="select">
+                    <option value="제목" selected >제목으로 메모 찾기</option>
+                    <option value="키워드">키워드로 메모 찾기</option>
+                    <option value="내용">내용으로 메모 찾기</option>
+                </select>
             </div>
         </form>
         <!-- /Search -->

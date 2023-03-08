@@ -14,9 +14,14 @@
 <!-- Content -->
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4">우리의 메모 모음집</h4>
-    <!-- Images -->
-    <h5 class="pb-1 mb-4">필요한 내용을 확인하여 주세요</h5>
+    <h4 class="fw-bold" style="margin : 10px;">
+        {{relation}}에 "<span style="color : #E96479;"> {{key}} </span>" 이(가) 포함된 메모 검색 결과
+    </h4>
+    <h4 style="display:inline-block; margin : 10px;">해당 키워드로 검색 : </h4>
+    {% for k in keywords %} 
+        <a style="font-size:22px" href="?key={{k.keyword}}&page={{p}}&relation=키워드">{{k.keyword}}</a> &nbsp; | &nbsp;
+    {% endfor %}
+    <br/><br/>
     <div id = "vue_div" class="row mb-5">
         <div v-if="[[memos ? memos.results:'']] == ''" class="col-md-6 col-xl-4">
             <div class="card mb-3">
@@ -130,7 +135,7 @@
             getList: function () {
                 $("#vue_div").LoadingOverlay("show");
                 
-                axios.get(`/apis/memos/search/?page={{p}}&relation=제목검색&key={{key}}`,
+                axios.get(`/apis/memos/search/?page={{p}}&relation={{relation}}&key={{key}}`,
                 ).then(function (response) {
                     vm.memos = response.data;
                     vm.count = Math.ceil(response.data.count / 9)

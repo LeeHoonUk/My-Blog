@@ -66,8 +66,8 @@ class MemoViewSet(viewsets.ModelViewSet):
         key = request.GET.get('key', '')
 
         # 포함하는 값 쿼리
-        queryset = (lambda rel, q : q(keywords__keyword__icontains=key) if rel == '키워드 검색' else (
-            q(content__icontains=key).all() if rel == '내용 검색' else q(title__icontains=key)
+        queryset = (lambda rel, q : q(keywords__keyword__icontains=key) if rel == '키워드' else (
+            q(content__icontains=key).all() if rel == '내용' else q(title__icontains=key)
         ))(relation, self.get_queryset().filter)
 
         # 페이지 구현
