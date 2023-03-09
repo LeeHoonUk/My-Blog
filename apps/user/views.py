@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from apps.forms.user_forms import *
 from django.http.response import JsonResponse
-from apps.models import Users
+from apps.models import Users, Memos
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 # 회원가입
@@ -87,6 +88,14 @@ def my_page(request):
     # 유저 확인
     user = Users.objects.get(pk=request.user.id)
 
+    # 페이지 구현
+    page = int(request.GET.get("p", 1))
+
+    # 내가 쓴 메모 구현
+    my_memo_paginator = Paginator(
+        Memos.objects.order_by("-created_at").filter(writer_id=request.user.id), 10)
+    my_memo = my_memo_paginator.get_page(page)
+
     # 비밀번호 변경
     if request.method == "POST":
         pw = request.POST.get('password')
@@ -98,4 +107,8 @@ def my_page(request):
             user.save()
             return redirect('logout')
 
-    return render(request, "user/mypage.html", {"nav_check": nav_check})
+    return render(request, "user/mypage.html", {"nav_check": nav_check, "my_memo": my_memo})
+
+ 
+
+    

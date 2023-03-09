@@ -13,9 +13,103 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="divider">
-                    <div class="divider-text">
-                        <i class="fa-solid fa-feather-pointed"></i>
+                <div class="col-md-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header">내가 작성한 메모</h5>
+                        <div class="card-body">
+                            <!-- Social Accounts -->
+                            {% if my_memo %}
+                                {% for m in my_memo %}
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0">
+                                            {% if m.img %}   
+                                                    <img src="{{m.img.url}}" alt="google" class="me-3" height="30" />
+                                            {% else %}
+                                                    <img src="{% static 'assets/interface.png' %}" alt="google" class="me-3" height="30" />
+                                            {% endif %} 
+                                        </div>
+                                        <div class="flex-grow-1 row">
+                                            <div class="col-8 col-sm-7 mb-sm-0 mb-2">
+                                                <h6 class="mb-0">{{m.title}}</h6>
+                                                <small class="text-muted">{{m.created_at|date:"Y년 m월 d일"}}</small>
+                                            </div>
+                                            <div class="col-4 col-sm-5 text-end">
+                                                <form id="frm{{m.id}}" action="/memo/view" method="POST">
+                                                    {% csrf_token %}    
+                                                    <input type="hidden" name="id" value="{{m.id}}" value="이동시킬밸류">
+                                                </form>
+                                                <a href="#" type="button" class="btn btn-icon btn-outline-secondary"
+                                                    onclick="javascript:document.getElementById('frm{{m.id}}').submit();">
+                                                    <i class="fa-solid fa-bookmark"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="d-flex mb-3">
+                                    <div class="flex-shrink-0">
+                                        <img src="{% static 'assets/interface.png' %}" alt="google" class="me-3" height="30" />
+                                    </div>
+                                    <div class="flex-grow-1 row">
+                                        <div class="col-8 col-sm-7 mb-sm-0 mb-2">
+                                            <h6 class="mb-0">작성한 메모가 없습니다.</h6>
+                                            <small class="text-muted">메모를 작성하여 주세요</small>
+                                        </div>
+                                        <div class="col-4 col-sm-5 text-end">
+                                            <a href="{% url 'm-write' %}"type="button" class="btn btn-icon btn-outline-secondary">
+                                                <i class="fa-solid fa-bookmark"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <!-- /Social Accounts -->
+                            <div class="demo-inline-spacing">
+                                <!-- Basic Pagination -->
+                                <nav style="display:flex;justify-content : center;" aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        {% if my_memo.has_previous %}
+                                            <li class="page-item first">
+                                                <a class="page-link" href="?p=1">
+                                                    <i class="tf-icon fa-solid fa-angles-left"></i>                                
+                                                </a>
+                                            </li>
+                                            <li class="page-item prev">
+                                                <a class="page-link" href="?p={{my_memo.previous_page_number }}">
+                                                    <i class="tf-icon fa-solid fa-angle-left"></i>                                
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link">❌</a>
+                                            </li>
+                                        {% endif %}
+                                        <li class="page-item active">
+                                            <a class="page-link">{{my_memo.number}} / {{my_memo.paginator.num_pages}}</a>
+                                        </li>
+                                        {% if my_memo.has_next %}
+                                            <li class="page-item next">
+                                                <a class="page-link" href="?p={{my_memo.next_page_number }}">
+                                                    <i class="tf-icon fa-solid fa-angle-right"></i>                                
+                                                </a>
+                                            </li>
+                                            <li class="page-item last">
+                                                <a class="page-link" href="?p={{my_memo.paginator.num_pages }}">
+                                                    <i class="tf-icon fa-solid fa-angles-right"></i>                                
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link">❌</a>
+                                            </li>
+                                        {% endif %}
+                                        
+                                  </ul>
+                                </nav>
+                                <!--/ Basic Pagination -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
