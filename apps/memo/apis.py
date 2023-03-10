@@ -86,4 +86,32 @@ class MemoViewSet(viewsets.ModelViewSet):
             "count" : len(queryset), "next" : page_next, 
             "previous" : page_previous, "results" : serializer.data
         }, status=status.HTTP_201_CREATED)
+    
+    @action(detail=True, methods=["get", "post"])
+    def subscribe(self, request, pk=None):
+        queryset = self.get_queryset().filter(pk=pk)
+
+        if not queryset.exists():
+
+            raise Http404
+
+        rtn = queryset.first().subscribe(request)
+
+        serializer = MemoSerializer(rtn)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=["get", "post"])
+    def cancel(self, request, pk=None):
+        queryset = self.get_queryset().filter(pk=pk)
+
+        if not queryset.exists():
+
+            raise Http404
+
+        rtn = queryset.first().cancel(request)
+        
+        serializer = MemoSerializer(rtn)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
         
